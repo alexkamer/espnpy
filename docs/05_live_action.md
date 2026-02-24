@@ -93,9 +93,11 @@ for player in summary['boxscore']['players'][:2]:
   "boxscore": {
     "teams": [
        {
+         "gameId": "401547403",
          "id": "1",
          "name": "Atlanta Falcons",
          "abbreviation": "ATL",
+         "logo": "https://a.espncdn.com/...",
          "stats": {
            "1st Downs": "20",
            "Total Yards": "221"
@@ -111,7 +113,7 @@ for player in summary['boxscore']['players'][:2]:
          "shortName": null,
          "starter": false,
          "jersey": "9",
-         "position": null,
+         "position": "QB",
          "headshot": "https://a.espncdn.com/...",
          "stats": {
             "passing": {
@@ -126,4 +128,45 @@ for player in summary['boxscore']['players'][:2]:
     ]
   }
 }
+```
+
+## 3. Advanced Odds (Multiple Sportsbooks)
+While `game_summary` provides a single "consensus" betting line, you can fetch the opening, closing, and current betting lines from over a dozen individual sportsbooks (like DraftKings, FanDuel, and Caesars) directly using the `odds()` endpoint.
+
+```python
+import espnpy
+import asyncio
+
+async def test_odds():
+    # Pass a Game ID
+    nba_odds = await espnpy.nba.odds("401584703")
+    
+    # Let's find DraftKings specifically
+    draftkings = next((o for o in nba_odds if o['provider'] == "DraftKings"), None)
+    print(f"DraftKings Spread: {draftkings['spread']}")
+    print(f"DraftKings Over/Under: {draftkings['overUnder']}")
+
+asyncio.run(test_odds())
+```
+
+### Expected Output Structure:
+```json
+[
+  {
+    "provider": "DraftKings",
+    "details": "MIL -6",
+    "overUnder": 228.0,
+    "spread": -6.0,
+    "awayMoneyLine": 200,
+    "homeMoneyLine": -245
+  },
+  {
+    "provider": "Caesars Sportsbook",
+    "details": "MIL -5.5",
+    "overUnder": 229.5,
+    "spread": -5.5,
+    "awayMoneyLine": 195,
+    "homeMoneyLine": -255
+  }
+]
 ```
