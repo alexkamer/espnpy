@@ -57,6 +57,14 @@ class LeagueProxy:
         """
         return await self._client.get_game_summary(self.league, event_id)
 
+    async def odds(self, event_id: str) -> List[Dict[str, Any]]:
+        """Fetch betting lines across all sportsbook providers for a specific event.
+        
+        Args:
+            event_id: The ID of the game/event.
+        """
+        return await self._client.get_odds(self.league, event_id)
+
     async def news(self, team_id: Optional[str] = None, limit: int = 50) -> List[Dict[str, Any]]:
         """Fetch the latest news headlines for this league.
         
@@ -639,6 +647,71 @@ class ESPNClient:
                     organized_stats[split_name] = stats_dict
                     
         return organized_stats
+
+    async def get_odds(self, league: str, event_id: str, sport: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch betting lines across all sportsbook providers for a specific game/event.
+        
+        Args:
+            league: The league (e.g., 'nba').
+            event_id: The unique ID of the game/event.
+            sport: Automatically inferred if not provided.
+            
+        Returns:
+            A list of standardized dictionaries containing odds from various providers (e.g. DraftKings, FanDuel).
+        """
+        resolved_sport = self._resolve_sport(league, sport)
+        
+        # Odds live on the CORE API
+        # Format: /sports/{sport}/leagues/{league}/events/{event_id}/competitions/{event_id}/odds
+        endpoint = f"sports/{resolved_sport}/leagues/{league}/events/{event_id}/competitions/{event_id}/odds"
+        try:
+            raw_data = await self._get(endpoint)
+        except httpx.HTTPStatusError as e:
+            # If the event doesn't exist or has no odds, safely return an empty list
+            if e.response.status_code == 404:
+                return []
+            raise e
+            
+        organized_odds = []
+        for item in raw_data.get("items", []):
+            provider_name = item.get("provider", {}).get("name", "Unknown")
+            
+            # Extract generic details (NBA / MLB structure)
+            details = item.get("details")
+            over_under = item.get("overUnder")
+            spread = item.get("spread")
+            moneyline_away = item.get("awayTeamOdds", {}).get("moneyLine")
+            moneyline_home = item.get("homeTeamOdds", {}).get("moneyLine")
+            
+            # Fallback for complex nesting (NFL / Soccer structure)
+            if not details and "bettingOdds" in item:
+                team_odds = item["bettingOdds"].get("teamOdds", {})
+                
+                spread_val = team_odds.get("preMatchSpreadHandicapHome", {}).get("value")
+                if spread_val:
+                    try: spread = float(spread_val)
+                    except ValueError: pass
+                    
+                ou_val = team_odds.get("preMatchTotalHandicap", {}).get("value")
+                if ou_val:
+                    try: over_under = float(ou_val)
+                    except ValueError: pass
+                    
+                away_ml = team_odds.get("preMatchMoneyLineAway", {}).get("value")
+                home_ml = team_odds.get("preMatchMoneyLineHome", {}).get("value")
+                if away_ml: moneyline_away = away_ml
+                if home_ml: moneyline_home = home_ml
+                
+            organized_odds.append({
+                "provider": provider_name,
+                "details": details or (f"Home {spread}" if spread else None),
+                "overUnder": over_under,
+                "spread": spread,
+                "awayMoneyLine": moneyline_away,
+                "homeMoneyLine": moneyline_home
+            })
+            
+        return organized_odds
 
     # ---------------------------------------------------------
     # Syntactic Sugar / Dot-Notation Handlers
