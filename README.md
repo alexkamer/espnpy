@@ -80,6 +80,21 @@ espnpy.eng_1.teams()
 espnpy.college_softball.news()
 ```
 
+## Popular Leagues Cheat Sheet
+`espnpy` automatically resolves **384+ global sports leagues**. Here is a quick reference for the most popular ones!
+
+*   🏈 **Football:** `espnpy.nfl`, `espnpy.college_football`, `espnpy.ufl`, `espnpy.cfl`
+*   🏀 **Basketball:** `espnpy.nba`, `espnpy.wnba`, `espnpy.mens_college_basketball`, `espnpy.womens_college_basketball`, `espnpy.fiba`
+*   ⚾️ **Baseball:** `espnpy.mlb`, `espnpy.college_baseball`, `espnpy.college_softball`
+*   🏒 **Hockey:** `espnpy.nhl`, `espnpy.mens_college_hockey`
+*   ⚽️ **Soccer:** `espnpy.eng_1` (EPL), `espnpy.esp_1` (La Liga), `espnpy.mls`, `espnpy.uefa_champions`, `espnpy.fifa_world`
+*   🏎️ **Racing:** `espnpy.f1`, `espnpy.nascar`, `espnpy.indycar`
+*   ⛳️ **Golf:** `espnpy.pga`, `espnpy.liv`, `espnpy.lpga`
+*   🥊 **MMA / Boxing:** `espnpy.ufc`, `espnpy.pfl`
+*   🎾 **Tennis:** `espnpy.atp`, `espnpy.wta`
+
+*For a comprehensive list of how to query soccer leagues (which ESPN designates with dots like `eng.1`) and other obscure leagues, check out the documentation folder!*
+
 ## Available Methods
 Once you have accessed a league via the proxy (e.g. `espnpy.nba`), you have access to the following standardized methods:
 
