@@ -62,6 +62,10 @@ class LeagueProxy:
         """
         return await self._client.get_news(self.league, team_id=team_id, limit=limit)
 
+    async def standings(self) -> List[Dict[str, Any]]:
+        """Fetch the current standings (wins, losses, win percentage) for the league."""
+        return await self._client.get_standings(self.league)
+
     async def roster(self, team_id: str) -> List[Dict[str, Any]]:
         """Fetch the current roster for a specific team in this league.
         Note: Historical rosters are not supported by the API.
@@ -454,6 +458,55 @@ class ESPNClient:
             })
             
         return organized_news
+
+    async def get_standings(self, league: str, sport: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch the current standings (wins, losses, win percentage) for the league.
+        
+        Args:
+            league: The league (e.g., 'nfl').
+            sport: Automatically inferred if not provided.
+            
+        Returns:
+            A standardized list of dictionaries containing team standings, ordered by rank.
+        """
+        resolved_sport = self._resolve_sport(league, sport)
+        
+        # Standings live on the v2 SITE API
+        # Example: https://site.api.espn.com/apis/v2/sports/football/nfl/standings
+        # We manually build this URL because the structure is slightly different than /apis/site/v2
+        url = f"https://site.api.espn.com/apis/v2/sports/{resolved_sport}/{league}/standings"
+        raw_data = await self.get_url(url)
+        
+        organized_standings = []
+        
+        # Standings are usually grouped by conference/league (e.g., AFC, NFC or Eastern, Western)
+        for group in raw_data.get("children", []):
+            group_name = group.get("name", "Overall")
+            entries = group.get("standings", {}).get("entries", [])
+            
+            for entry in entries:
+                team_info = entry.get("team", {})
+                
+                # ESPN provides a list of stats (wins, losses, ties, pct). We flatten this into a dict.
+                raw_stats = entry.get("stats", [])
+                stats_dict = {s.get("name"): s.get("displayValue") for s in raw_stats if "name" in s and "displayValue" in s}
+                
+                organized_standings.append({
+                    "teamId": team_info.get("id", ""),
+                    "team": team_info.get("displayName", ""),
+                    "group": group_name,
+                    "wins": stats_dict.get("wins", "0"),
+                    "losses": stats_dict.get("losses", "0"),
+                    "ties": stats_dict.get("ties", "0"),
+                    "winPercent": stats_dict.get("winPercent", "0"),
+                    "gamesBehind": stats_dict.get("gamesBehind", "-"),
+                    "streak": stats_dict.get("streak", "-"),
+                    "pointsFor": stats_dict.get("pointsFor", "0"),
+                    "pointsAgainst": stats_dict.get("pointsAgainst", "0"),
+                    "differential": stats_dict.get("differential", "0")
+                })
+                
+        return organized_standings
 
     # ---------------------------------------------------------
     # Syntactic Sugar / Dot-Notation Handlers

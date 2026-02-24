@@ -1,32 +1,30 @@
 import asyncio
-import json
 from espnpy import ESPNClient
 
 async def main():
     async with ESPNClient() as client:
         
-        # Test 1: General NFL News
-        print("Fetching Top 2 General NFL Headlines...")
-        nfl_news = await client.nfl.news(limit=2)
+        print("--- NBA Standings ---")
+        nba = await client.nba.standings()
         
-        for article in nfl_news:
-            print(f"- {article['headline']}")
-            if article['premium']:
-                print("  (This is an ESPN+ exclusive!)")
-            print(f"  {article['url']}")
+        east_leader = next((t for t in nba if t["group"] == "Eastern Conference"), None)
+        west_leader = next((t for t in nba if t["group"] == "Western Conference"), None)
         
-        print("\n" + "="*50 + "\n")
-        
-        # Test 2: Team Specific News (Atlanta Falcons, ID: 1)
-        print("Fetching Top 2 News stories specifically about the Atlanta Falcons...")
-        falcons_news = await client.nfl.news(team_id="1", limit=2)
-        
-        for article in falcons_news:
-            print(f"- {article['headline']}")
-            print(f"  {article['url']}")
+        if east_leader:
+            print(f"East Leader: {east_leader['team']} ({east_leader['wins']}-{east_leader['losses']})")
+        if west_leader:
+            print(f"West Leader: {west_leader['team']} ({west_leader['wins']}-{west_leader['losses']})")
             
-        print("\n--- Example JSON of an Article ---")
-        print(json.dumps(falcons_news[0], indent=2))
+        print("\n--- MLB Standings (Spring Training) ---")
+        mlb = await client.mlb.standings()
+        
+        grapefruit_leader = next((t for t in mlb if t["group"] == "Grapefruit League"), None)
+        cactus_leader = next((t for t in mlb if t["group"] == "Cactus League"), None)
+        
+        if grapefruit_leader:
+            print(f"Grapefruit Leader: {grapefruit_leader['team']} ({grapefruit_leader['wins']}-{grapefruit_leader['losses']})")
+        if cactus_leader:
+            print(f"Cactus Leader: {cactus_leader['team']} ({cactus_leader['wins']}-{cactus_leader['losses']})")
 
 if __name__ == "__main__":
     asyncio.run(main())
