@@ -74,7 +74,8 @@ If you don't want to query the entire league-wide scoreboard across 18 weeks jus
 
 ```python
 # '1' is the Atlanta Falcons (NFL). We ask for their 2023 schedule.
-schedule = await espnpy.nfl.schedule("1", season="2023")
+# You can also pass season_type="1" to get their preseason schedule!
+schedule = await espnpy.nfl.schedule("1", season="2023", season_type="2")
 
 for game in schedule:
     print(f"[{game['date']}] {game['awayTeam']} at {game['homeTeam']}")
