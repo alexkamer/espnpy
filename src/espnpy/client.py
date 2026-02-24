@@ -575,25 +575,1156 @@ class ESPNClient:
     
     # We define the most popular leagues explicitly so IDE Autocomplete (VSCode, PyCharm) works flawlessly.
     @property
-    def nfl(self) -> LeagueProxy: return LeagueProxy(self, "nfl")
+    def league_164205(self) -> "LeagueProxy": return LeagueProxy(self, "164205")
 
     @property
-    def nba(self) -> LeagueProxy: return LeagueProxy(self, "nba")
+    def league_180659(self) -> "LeagueProxy": return LeagueProxy(self, "180659")
 
     @property
-    def mlb(self) -> LeagueProxy: return LeagueProxy(self, "mlb")
+    def league_2009(self) -> "LeagueProxy": return LeagueProxy(self, "2009")
 
     @property
-    def nhl(self) -> LeagueProxy: return LeagueProxy(self, "nhl")
-    
-    @property
-    def wnba(self) -> LeagueProxy: return LeagueProxy(self, "wnba")
-    
-    @property
-    def college_football(self) -> LeagueProxy: return LeagueProxy(self, "college-football")
+    def league_236461(self) -> "LeagueProxy": return LeagueProxy(self, "236461")
 
     @property
-    def mens_college_basketball(self) -> LeagueProxy: return LeagueProxy(self, "mens-college-basketball")
+    def league_242041(self) -> "LeagueProxy": return LeagueProxy(self, "242041")
+
+    @property
+    def league_244293(self) -> "LeagueProxy": return LeagueProxy(self, "244293")
+
+    @property
+    def league_267979(self) -> "LeagueProxy": return LeagueProxy(self, "267979")
+
+    @property
+    def league_268565(self) -> "LeagueProxy": return LeagueProxy(self, "268565")
+
+    @property
+    def league_270555(self) -> "LeagueProxy": return LeagueProxy(self, "270555")
+
+    @property
+    def league_270557(self) -> "LeagueProxy": return LeagueProxy(self, "270557")
+
+    @property
+    def league_270559(self) -> "LeagueProxy": return LeagueProxy(self, "270559")
+
+    @property
+    def league_270563(self) -> "LeagueProxy": return LeagueProxy(self, "270563")
+
+    @property
+    def league_271937(self) -> "LeagueProxy": return LeagueProxy(self, "271937")
+
+    @property
+    def league_272073(self) -> "LeagueProxy": return LeagueProxy(self, "272073")
+
+    @property
+    def league_282(self) -> "LeagueProxy": return LeagueProxy(self, "282")
+
+    @property
+    def league_283(self) -> "LeagueProxy": return LeagueProxy(self, "283")
+
+    @property
+    def league_289234(self) -> "LeagueProxy": return LeagueProxy(self, "289234")
+
+    @property
+    def league_289237(self) -> "LeagueProxy": return LeagueProxy(self, "289237")
+
+    @property
+    def league_289262(self) -> "LeagueProxy": return LeagueProxy(self, "289262")
+
+    @property
+    def league_289271(self) -> "LeagueProxy": return LeagueProxy(self, "289271")
+
+    @property
+    def league_289272(self) -> "LeagueProxy": return LeagueProxy(self, "289272")
+
+    @property
+    def league_289274(self) -> "LeagueProxy": return LeagueProxy(self, "289274")
+
+    @property
+    def league_289277(self) -> "LeagueProxy": return LeagueProxy(self, "289277")
+
+    @property
+    def league_289279(self) -> "LeagueProxy": return LeagueProxy(self, "289279")
+
+    @property
+    def league_3(self) -> "LeagueProxy": return LeagueProxy(self, "3")
+
+    @property
+    def absolute(self) -> "LeagueProxy": return LeagueProxy(self, "absolute")
+
+    @property
+    def afc_asian_cup(self) -> "LeagueProxy": return LeagueProxy(self, "afc.asian.cup")
+
+    @property
+    def afc_challenge_cup(self) -> "LeagueProxy": return LeagueProxy(self, "afc.challenge_cup")
+
+    @property
+    def afc_champions(self) -> "LeagueProxy": return LeagueProxy(self, "afc.champions")
+
+    @property
+    def afc_cup(self) -> "LeagueProxy": return LeagueProxy(self, "afc.cup")
+
+    @property
+    def afc_cupq(self) -> "LeagueProxy": return LeagueProxy(self, "afc.cupq")
+
+    @property
+    def afc_saff_championship(self) -> "LeagueProxy": return LeagueProxy(self, "afc.saff.championship")
+
+    @property
+    def afc_w_asian_cup(self) -> "LeagueProxy": return LeagueProxy(self, "afc.w.asian.cup")
+
+    @property
+    def aff_championship(self) -> "LeagueProxy": return LeagueProxy(self, "aff.championship")
+
+    @property
+    def affliction(self) -> "LeagueProxy": return LeagueProxy(self, "affliction")
+
+    @property
+    def afl(self) -> "LeagueProxy": return LeagueProxy(self, "afl")
+
+    @property
+    def arg_1(self) -> "LeagueProxy": return LeagueProxy(self, "arg.1")
+
+    @property
+    def arg_2(self) -> "LeagueProxy": return LeagueProxy(self, "arg.2")
+
+    @property
+    def arg_3(self) -> "LeagueProxy": return LeagueProxy(self, "arg.3")
+
+    @property
+    def arg_4(self) -> "LeagueProxy": return LeagueProxy(self, "arg.4")
+
+    @property
+    def arg_copa(self) -> "LeagueProxy": return LeagueProxy(self, "arg.copa")
+
+    @property
+    def arg_copa_de_la_superliga(self) -> "LeagueProxy": return LeagueProxy(self, "arg.copa_de_la_superliga")
+
+    @property
+    def arg_supercopa(self) -> "LeagueProxy": return LeagueProxy(self, "arg.supercopa")
+
+    @property
+    def arg_supercopa_internacional(self) -> "LeagueProxy": return LeagueProxy(self, "arg.supercopa.internacional")
+
+    @property
+    def arg_trofeo_de_la_campeones(self) -> "LeagueProxy": return LeagueProxy(self, "arg.trofeo_de_la_campeones")
+
+    @property
+    def atp(self) -> "LeagueProxy": return LeagueProxy(self, "atp")
+
+    @property
+    def aus_1(self) -> "LeagueProxy": return LeagueProxy(self, "aus.1")
+
+    @property
+    def aus_w_1(self) -> "LeagueProxy": return LeagueProxy(self, "aus.w.1")
+
+    @property
+    def aut_1(self) -> "LeagueProxy": return LeagueProxy(self, "aut.1")
+
+    @property
+    def bang_fighting(self) -> "LeagueProxy": return LeagueProxy(self, "bang-fighting")
+
+    @property
+    def bangabandhu_cup(self) -> "LeagueProxy": return LeagueProxy(self, "bangabandhu.cup")
+
+    @property
+    def banni_fight(self) -> "LeagueProxy": return LeagueProxy(self, "banni-fight")
+
+    @property
+    def banzay(self) -> "LeagueProxy": return LeagueProxy(self, "banzay")
+
+    @property
+    def barracao(self) -> "LeagueProxy": return LeagueProxy(self, "barracao")
+
+    @property
+    def battlezone(self) -> "LeagueProxy": return LeagueProxy(self, "battlezone")
+
+    @property
+    def bel_1(self) -> "LeagueProxy": return LeagueProxy(self, "bel.1")
+
+    @property
+    def bel_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "bel.promotion.relegation")
+
+    @property
+    def bellator(self) -> "LeagueProxy": return LeagueProxy(self, "bellator")
+
+    @property
+    def benevides(self) -> "LeagueProxy": return LeagueProxy(self, "benevides")
+
+    @property
+    def big_fight(self) -> "LeagueProxy": return LeagueProxy(self, "big-fight")
+
+    @property
+    def blackout(self) -> "LeagueProxy": return LeagueProxy(self, "blackout")
+
+    @property
+    def bol_1(self) -> "LeagueProxy": return LeagueProxy(self, "bol.1")
+
+    @property
+    def bol_copa(self) -> "LeagueProxy": return LeagueProxy(self, "bol.copa")
+
+    @property
+    def bol_ply_rel(self) -> "LeagueProxy": return LeagueProxy(self, "bol.ply.rel")
+
+    @property
+    def bosnia(self) -> "LeagueProxy": return LeagueProxy(self, "bosnia")
+
+    @property
+    def boxe(self) -> "LeagueProxy": return LeagueProxy(self, "boxe")
+
+    @property
+    def bra_1(self) -> "LeagueProxy": return LeagueProxy(self, "bra.1")
+
+    @property
+    def bra_2(self) -> "LeagueProxy": return LeagueProxy(self, "bra.2")
+
+    @property
+    def bra_3(self) -> "LeagueProxy": return LeagueProxy(self, "bra.3")
+
+    @property
+    def bra_camp_carioca(self) -> "LeagueProxy": return LeagueProxy(self, "bra.camp.carioca")
+
+    @property
+    def bra_camp_gaucho(self) -> "LeagueProxy": return LeagueProxy(self, "bra.camp.gaucho")
+
+    @property
+    def bra_camp_mineiro(self) -> "LeagueProxy": return LeagueProxy(self, "bra.camp.mineiro")
+
+    @property
+    def bra_camp_paulista(self) -> "LeagueProxy": return LeagueProxy(self, "bra.camp.paulista")
+
+    @property
+    def bra_carioca_groupa(self) -> "LeagueProxy": return LeagueProxy(self, "bra.carioca.groupa")
+
+    @property
+    def bra_carioca_groupb(self) -> "LeagueProxy": return LeagueProxy(self, "bra.carioca.groupb")
+
+    @property
+    def bra_copa_do_brazil(self) -> "LeagueProxy": return LeagueProxy(self, "bra.copa_do_brazil")
+
+    @property
+    def bra_copa_do_nordeste(self) -> "LeagueProxy": return LeagueProxy(self, "bra.copa_do_nordeste")
+
+    @property
+    def bra_supercopa_do_brazil(self) -> "LeagueProxy": return LeagueProxy(self, "bra.supercopa_do_brazil")
+
+    @property
+    def brazilian_freestyle(self) -> "LeagueProxy": return LeagueProxy(self, "brazilian-freestyle")
+
+    @property
+    def budo(self) -> "LeagueProxy": return LeagueProxy(self, "budo")
+
+    @property
+    def caf_champions(self) -> "LeagueProxy": return LeagueProxy(self, "caf.champions")
+
+    @property
+    def caf_championship(self) -> "LeagueProxy": return LeagueProxy(self, "caf.championship")
+
+    @property
+    def caf_championship_qual(self) -> "LeagueProxy": return LeagueProxy(self, "caf.championship_qual")
+
+    @property
+    def caf_confed(self) -> "LeagueProxy": return LeagueProxy(self, "caf.confed")
+
+    @property
+    def caf_cosafa(self) -> "LeagueProxy": return LeagueProxy(self, "caf.cosafa")
+
+    @property
+    def caf_nations(self) -> "LeagueProxy": return LeagueProxy(self, "caf.nations")
+
+    @property
+    def caf_nations_qual(self) -> "LeagueProxy": return LeagueProxy(self, "caf.nations_qual")
+
+    @property
+    def caf_w_nations(self) -> "LeagueProxy": return LeagueProxy(self, "caf.w.nations")
+
+    @property
+    def cage_warriors(self) -> "LeagueProxy": return LeagueProxy(self, "cage-warriors")
+
+    @property
+    def campeones_cup(self) -> "LeagueProxy": return LeagueProxy(self, "campeones.cup")
+
+    @property
+    def can_w_nsl(self) -> "LeagueProxy": return LeagueProxy(self, "can.w.nsl")
+
+    @property
+    def caribbean_series(self) -> "LeagueProxy": return LeagueProxy(self, "caribbean-series")
+
+    @property
+    def cfl(self) -> "LeagueProxy": return LeagueProxy(self, "cfl")
+
+    @property
+    def champions_tour(self) -> "LeagueProxy": return LeagueProxy(self, "champions-tour")
+
+    @property
+    def chi_1(self) -> "LeagueProxy": return LeagueProxy(self, "chi.1")
+
+    @property
+    def chi_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "chi.1.promotion.relegation")
+
+    @property
+    def chi_2(self) -> "LeagueProxy": return LeagueProxy(self, "chi.2")
+
+    @property
+    def chi_copa_chi(self) -> "LeagueProxy": return LeagueProxy(self, "chi.copa_chi")
+
+    @property
+    def chi_super_cup(self) -> "LeagueProxy": return LeagueProxy(self, "chi.super_cup")
+
+    @property
+    def chn_1(self) -> "LeagueProxy": return LeagueProxy(self, "chn.1")
+
+    @property
+    def chn_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "chn.1.promotion.relegation")
+
+    @property
+    def club_friendly(self) -> "LeagueProxy": return LeagueProxy(self, "club.friendly")
+
+    @property
+    def col_1(self) -> "LeagueProxy": return LeagueProxy(self, "col.1")
+
+    @property
+    def col_2(self) -> "LeagueProxy": return LeagueProxy(self, "col.2")
+
+    @property
+    def col_copa(self) -> "LeagueProxy": return LeagueProxy(self, "col.copa")
+
+    @property
+    def col_superliga(self) -> "LeagueProxy": return LeagueProxy(self, "col.superliga")
+
+    @property
+    def college_baseball(self) -> "LeagueProxy": return LeagueProxy(self, "college-baseball")
+
+    @property
+    def college_football(self) -> "LeagueProxy": return LeagueProxy(self, "college-football")
+
+    @property
+    def college_softball(self) -> "LeagueProxy": return LeagueProxy(self, "college-softball")
+
+    @property
+    def concacaf_central_american_cup(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.central.american.cup")
+
+    @property
+    def concacaf_champions(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.champions")
+
+    @property
+    def concacaf_champions_cup(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.champions_cup")
+
+    @property
+    def concacaf_confederations_playoff(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.confederations_playoff")
+
+    @property
+    def concacaf_gold(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.gold")
+
+    @property
+    def concacaf_gold_qual(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.gold_qual")
+
+    @property
+    def concacaf_leagues_cup(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.leagues.cup")
+
+    @property
+    def concacaf_nations_league(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.nations.league")
+
+    @property
+    def concacaf_u23(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.u23")
+
+    @property
+    def concacaf_w_champions_cup(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.w.champions_cup")
+
+    @property
+    def concacaf_w_gold(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.w.gold")
+
+    @property
+    def concacaf_womens_championship(self) -> "LeagueProxy": return LeagueProxy(self, "concacaf.womens.championship")
+
+    @property
+    def conmebol_america(self) -> "LeagueProxy": return LeagueProxy(self, "conmebol.america")
+
+    @property
+    def conmebol_america_femenina(self) -> "LeagueProxy": return LeagueProxy(self, "conmebol.america.femenina")
+
+    @property
+    def conmebol_libertadores(self) -> "LeagueProxy": return LeagueProxy(self, "conmebol.libertadores")
+
+    @property
+    def conmebol_recopa(self) -> "LeagueProxy": return LeagueProxy(self, "conmebol.recopa")
+
+    @property
+    def conmebol_sudamericana(self) -> "LeagueProxy": return LeagueProxy(self, "conmebol.sudamericana")
+
+    @property
+    def crc_1(self) -> "LeagueProxy": return LeagueProxy(self, "crc.1")
+
+    @property
+    def cyp_1(self) -> "LeagueProxy": return LeagueProxy(self, "cyp.1")
+
+    @property
+    def den_1(self) -> "LeagueProxy": return LeagueProxy(self, "den.1")
+
+    @property
+    def dominican_winter_league(self) -> "LeagueProxy": return LeagueProxy(self, "dominican-winter-league")
+
+    @property
+    def dream(self) -> "LeagueProxy": return LeagueProxy(self, "dream")
+
+    @property
+    def ecu_1(self) -> "LeagueProxy": return LeagueProxy(self, "ecu.1")
+
+    @property
+    def eng_1(self) -> "LeagueProxy": return LeagueProxy(self, "eng.1")
+
+    @property
+    def eng_2(self) -> "LeagueProxy": return LeagueProxy(self, "eng.2")
+
+    @property
+    def eng_3(self) -> "LeagueProxy": return LeagueProxy(self, "eng.3")
+
+    @property
+    def eng_4(self) -> "LeagueProxy": return LeagueProxy(self, "eng.4")
+
+    @property
+    def eng_5(self) -> "LeagueProxy": return LeagueProxy(self, "eng.5")
+
+    @property
+    def eng_charity(self) -> "LeagueProxy": return LeagueProxy(self, "eng.charity")
+
+    @property
+    def eng_fa(self) -> "LeagueProxy": return LeagueProxy(self, "eng.fa")
+
+    @property
+    def eng_league_cup(self) -> "LeagueProxy": return LeagueProxy(self, "eng.league_cup")
+
+    @property
+    def eng_trophy(self) -> "LeagueProxy": return LeagueProxy(self, "eng.trophy")
+
+    @property
+    def eng_w_1(self) -> "LeagueProxy": return LeagueProxy(self, "eng.w.1")
+
+    @property
+    def eng_w_fa(self) -> "LeagueProxy": return LeagueProxy(self, "eng.w.fa")
+
+    @property
+    def eng_w_league_cup(self) -> "LeagueProxy": return LeagueProxy(self, "eng.w.league_cup")
+
+    @property
+    def esp_1(self) -> "LeagueProxy": return LeagueProxy(self, "esp.1")
+
+    @property
+    def esp_2(self) -> "LeagueProxy": return LeagueProxy(self, "esp.2")
+
+    @property
+    def esp_copa_de_la_reina(self) -> "LeagueProxy": return LeagueProxy(self, "esp.copa_de_la_reina")
+
+    @property
+    def esp_copa_del_rey(self) -> "LeagueProxy": return LeagueProxy(self, "esp.copa_del_rey")
+
+    @property
+    def esp_joan_gamper(self) -> "LeagueProxy": return LeagueProxy(self, "esp.joan_gamper")
+
+    @property
+    def esp_super_cup(self) -> "LeagueProxy": return LeagueProxy(self, "esp.super_cup")
+
+    @property
+    def esp_w_1(self) -> "LeagueProxy": return LeagueProxy(self, "esp.w.1")
+
+    @property
+    def eur(self) -> "LeagueProxy": return LeagueProxy(self, "eur")
+
+    @property
+    def euroamericana_supercopa(self) -> "LeagueProxy": return LeagueProxy(self, "euroamericana.supercopa")
+
+    @property
+    def f1(self) -> "LeagueProxy": return LeagueProxy(self, "f1")
+
+    @property
+    def fiba(self) -> "LeagueProxy": return LeagueProxy(self, "fiba")
+
+    @property
+    def fifa_concacaf_olympicsq(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.concacaf.olympicsq")
+
+    @property
+    def fifa_conmebol_olympicsq(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.conmebol.olympicsq")
+
+    @property
+    def fifa_cwc(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.cwc")
+
+    @property
+    def fifa_friendly(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.friendly")
+
+    @property
+    def fifa_friendly_w(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.friendly.w")
+
+    @property
+    def fifa_friendly_u21(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.friendly_u21")
+
+    @property
+    def fifa_intercontinental_cup(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.intercontinental.cup")
+
+    @property
+    def fifa_intercontinental_cup(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.intercontinental_cup")
+
+    @property
+    def fifa_intercontinental_cup_not_used(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.intercontinental_cup_not_used")
+
+    @property
+    def fifa_olympics(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.olympics")
+
+    @property
+    def fifa_shebelieves(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.shebelieves")
+
+    @property
+    def fifa_w_champions_cup(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.w.champions_cup")
+
+    @property
+    def fifa_w_concacaf_olympicsq(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.w.concacaf.olympicsq")
+
+    @property
+    def fifa_w_olympics(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.w.olympics")
+
+    @property
+    def fifa_wcq_ply(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.wcq.ply")
+
+    @property
+    def fifa_world(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.world")
+
+    @property
+    def fifa_world_u17(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.world.u17")
+
+    @property
+    def fifa_world_u20(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.world.u20")
+
+    @property
+    def fifa_worldq_afc(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.afc")
+
+    @property
+    def fifa_worldq_afc_conmebol(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.afc.conmebol")
+
+    @property
+    def fifa_worldq_caf(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.caf")
+
+    @property
+    def fifa_worldq_concacaf(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.concacaf")
+
+    @property
+    def fifa_worldq_concacaf_ofc(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.concacaf.ofc")
+
+    @property
+    def fifa_worldq_conmebol(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.conmebol")
+
+    @property
+    def fifa_worldq_ofc(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.ofc")
+
+    @property
+    def fifa_worldq_uefa(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.worldq.uefa")
+
+    @property
+    def fifa_wwc(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.wwc")
+
+    @property
+    def fifa_wwcq_ply(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.wwcq.ply")
+
+    @property
+    def fifa_wworld_u17(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.wworld.u17")
+
+    @property
+    def fifa_wworldq_uefa(self) -> "LeagueProxy": return LeagueProxy(self, "fifa.wworldq.uefa")
+
+    @property
+    def fng(self) -> "LeagueProxy": return LeagueProxy(self, "fng")
+
+    @property
+    def fra_1(self) -> "LeagueProxy": return LeagueProxy(self, "fra.1")
+
+    @property
+    def fra_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "fra.1.promotion.relegation")
+
+    @property
+    def fra_2(self) -> "LeagueProxy": return LeagueProxy(self, "fra.2")
+
+    @property
+    def fra_coupe_de_france(self) -> "LeagueProxy": return LeagueProxy(self, "fra.coupe_de_france")
+
+    @property
+    def fra_super_cup(self) -> "LeagueProxy": return LeagueProxy(self, "fra.super_cup")
+
+    @property
+    def fra_w_1(self) -> "LeagueProxy": return LeagueProxy(self, "fra.w.1")
+
+    @property
+    def friendly_emirates_cup(self) -> "LeagueProxy": return LeagueProxy(self, "friendly.emirates_cup")
+
+    @property
+    def ger_1(self) -> "LeagueProxy": return LeagueProxy(self, "ger.1")
+
+    @property
+    def ger_2(self) -> "LeagueProxy": return LeagueProxy(self, "ger.2")
+
+    @property
+    def ger_2_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "ger.2.promotion.relegation")
+
+    @property
+    def ger_a_bayernliganorth(self) -> "LeagueProxy": return LeagueProxy(self, "ger.a.bayernliganorth")
+
+    @property
+    def ger_dfb_pokal(self) -> "LeagueProxy": return LeagueProxy(self, "ger.dfb_pokal")
+
+    @property
+    def ger_playoff_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "ger.playoff.relegation")
+
+    @property
+    def ger_super_cup(self) -> "LeagueProxy": return LeagueProxy(self, "ger.super_cup")
+
+    @property
+    def gha_1(self) -> "LeagueProxy": return LeagueProxy(self, "gha.1")
+
+    @property
+    def global_arnold_clark_cup(self) -> "LeagueProxy": return LeagueProxy(self, "global.arnold.clark_cup")
+
+    @property
+    def global_champs_cup(self) -> "LeagueProxy": return LeagueProxy(self, "global.champs_cup")
+
+    @property
+    def global_club_challenge(self) -> "LeagueProxy": return LeagueProxy(self, "global.club_challenge")
+
+    @property
+    def global_finalissima(self) -> "LeagueProxy": return LeagueProxy(self, "global.finalissima")
+
+    @property
+    def global_gulf_cup(self) -> "LeagueProxy": return LeagueProxy(self, "global.gulf_cup")
+
+    @property
+    def global_pinatar_cup(self) -> "LeagueProxy": return LeagueProxy(self, "global.pinatar_cup")
+
+    @property
+    def global_toulon(self) -> "LeagueProxy": return LeagueProxy(self, "global.toulon")
+
+    @property
+    def global_u20_intercontinental_cup(self) -> "LeagueProxy": return LeagueProxy(self, "global.u20.intercontinental_cup")
+
+    @property
+    def global_w_finalissima(self) -> "LeagueProxy": return LeagueProxy(self, "global.w.finalissima")
+
+    @property
+    def global_wchamps_cup(self) -> "LeagueProxy": return LeagueProxy(self, "global.wchamps_cup")
+
+    @property
+    def gre_1(self) -> "LeagueProxy": return LeagueProxy(self, "gre.1")
+
+    @property
+    def gua_1(self) -> "LeagueProxy": return LeagueProxy(self, "gua.1")
+
+    @property
+    def hockey_world_cup(self) -> "LeagueProxy": return LeagueProxy(self, "hockey-world-cup")
+
+    @property
+    def hon_1(self) -> "LeagueProxy": return LeagueProxy(self, "hon.1")
+
+    @property
+    def idn_1(self) -> "LeagueProxy": return LeagueProxy(self, "idn.1")
+
+    @property
+    def ifc(self) -> "LeagueProxy": return LeagueProxy(self, "ifc")
+
+    @property
+    def ifl(self) -> "LeagueProxy": return LeagueProxy(self, "ifl")
+
+    @property
+    def ind_1(self) -> "LeagueProxy": return LeagueProxy(self, "ind.1")
+
+    @property
+    def ind_2(self) -> "LeagueProxy": return LeagueProxy(self, "ind.2")
+
+    @property
+    def ir1_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "ir1.1.promotion.relegation")
+
+    @property
+    def irl(self) -> "LeagueProxy": return LeagueProxy(self, "irl")
+
+    @property
+    def irl_1(self) -> "LeagueProxy": return LeagueProxy(self, "irl.1")
+
+    @property
+    def ita_1(self) -> "LeagueProxy": return LeagueProxy(self, "ita.1")
+
+    @property
+    def ita_2(self) -> "LeagueProxy": return LeagueProxy(self, "ita.2")
+
+    @property
+    def ita_coppa_italia(self) -> "LeagueProxy": return LeagueProxy(self, "ita.coppa_italia")
+
+    @property
+    def ita_super_cup(self) -> "LeagueProxy": return LeagueProxy(self, "ita.super_cup")
+
+    @property
+    def jpn_1(self) -> "LeagueProxy": return LeagueProxy(self, "jpn.1")
+
+    @property
+    def jpn_world_challenge(self) -> "LeagueProxy": return LeagueProxy(self, "jpn.world_challenge")
+
+    @property
+    def k1(self) -> "LeagueProxy": return LeagueProxy(self, "k1")
+
+    @property
+    def ken_1(self) -> "LeagueProxy": return LeagueProxy(self, "ken.1")
+
+    @property
+    def ksa_1(self) -> "LeagueProxy": return LeagueProxy(self, "ksa.1")
+
+    @property
+    def ksa_kings_cup(self) -> "LeagueProxy": return LeagueProxy(self, "ksa.kings.cup")
+
+    @property
+    def ksw(self) -> "LeagueProxy": return LeagueProxy(self, "ksw")
+
+    @property
+    def lfa(self) -> "LeagueProxy": return LeagueProxy(self, "lfa")
+
+    @property
+    def lfc(self) -> "LeagueProxy": return LeagueProxy(self, "lfc")
+
+    @property
+    def liv(self) -> "LeagueProxy": return LeagueProxy(self, "liv")
+
+    @property
+    def llb(self) -> "LeagueProxy": return LeagueProxy(self, "llb")
+
+    @property
+    def lls(self) -> "LeagueProxy": return LeagueProxy(self, "lls")
+
+    @property
+    def lpga(self) -> "LeagueProxy": return LeagueProxy(self, "lpga")
+
+    @property
+    def m1(self) -> "LeagueProxy": return LeagueProxy(self, "m1")
+
+    @property
+    def mens_college_basketball(self) -> "LeagueProxy": return LeagueProxy(self, "mens-college-basketball")
+
+    @property
+    def mens_college_hockey(self) -> "LeagueProxy": return LeagueProxy(self, "mens-college-hockey")
+
+    @property
+    def mens_college_lacrosse(self) -> "LeagueProxy": return LeagueProxy(self, "mens-college-lacrosse")
+
+    @property
+    def mens_college_volleyball(self) -> "LeagueProxy": return LeagueProxy(self, "mens-college-volleyball")
+
+    @property
+    def mens_college_water_polo(self) -> "LeagueProxy": return LeagueProxy(self, "mens-college-water-polo")
+
+    @property
+    def mens_olympics_basketball(self) -> "LeagueProxy": return LeagueProxy(self, "mens-olympics-basketball")
+
+    @property
+    def mens_olympics_golf(self) -> "LeagueProxy": return LeagueProxy(self, "mens-olympics-golf")
+
+    @property
+    def mex_1(self) -> "LeagueProxy": return LeagueProxy(self, "mex.1")
+
+    @property
+    def mex_2(self) -> "LeagueProxy": return LeagueProxy(self, "mex.2")
+
+    @property
+    def mex_campeon(self) -> "LeagueProxy": return LeagueProxy(self, "mex.campeon")
+
+    @property
+    def mexican_winter_league(self) -> "LeagueProxy": return LeagueProxy(self, "mexican-winter-league")
+
+    @property
+    def mfc(self) -> "LeagueProxy": return LeagueProxy(self, "mfc")
+
+    @property
+    def mlb(self) -> "LeagueProxy": return LeagueProxy(self, "mlb")
+
+    @property
+    def mys_1(self) -> "LeagueProxy": return LeagueProxy(self, "mys.1")
+
+    @property
+    def nascar_premier(self) -> "LeagueProxy": return LeagueProxy(self, "nascar-premier")
+
+    @property
+    def nascar_secondary(self) -> "LeagueProxy": return LeagueProxy(self, "nascar-secondary")
+
+    @property
+    def nascar_truck(self) -> "LeagueProxy": return LeagueProxy(self, "nascar-truck")
+
+    @property
+    def nba(self) -> "LeagueProxy": return LeagueProxy(self, "nba")
+
+    @property
+    def nba_development(self) -> "LeagueProxy": return LeagueProxy(self, "nba-development")
+
+    @property
+    def nba_summer_california(self) -> "LeagueProxy": return LeagueProxy(self, "nba-summer-california")
+
+    @property
+    def nba_summer_golden_state(self) -> "LeagueProxy": return LeagueProxy(self, "nba-summer-golden-state")
+
+    @property
+    def nba_summer_las_vegas(self) -> "LeagueProxy": return LeagueProxy(self, "nba-summer-las-vegas")
+
+    @property
+    def nba_summer_orlando(self) -> "LeagueProxy": return LeagueProxy(self, "nba-summer-orlando")
+
+    @property
+    def nba_summer_sacramento(self) -> "LeagueProxy": return LeagueProxy(self, "nba-summer-sacramento")
+
+    @property
+    def nba_summer_utah(self) -> "LeagueProxy": return LeagueProxy(self, "nba-summer-utah")
+
+    @property
+    def nbl(self) -> "LeagueProxy": return LeagueProxy(self, "nbl")
+
+    @property
+    def ned_1(self) -> "LeagueProxy": return LeagueProxy(self, "ned.1")
+
+    @property
+    def ned_2(self) -> "LeagueProxy": return LeagueProxy(self, "ned.2")
+
+    @property
+    def ned_3(self) -> "LeagueProxy": return LeagueProxy(self, "ned.3")
+
+    @property
+    def ned_3_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "ned.3.promotion.relegation")
+
+    @property
+    def ned_cup(self) -> "LeagueProxy": return LeagueProxy(self, "ned.cup")
+
+    @property
+    def ned_playoff_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "ned.playoff.relegation")
+
+    @property
+    def ned_supercup(self) -> "LeagueProxy": return LeagueProxy(self, "ned.supercup")
+
+    @property
+    def ned_w_1(self) -> "LeagueProxy": return LeagueProxy(self, "ned.w.1")
+
+    @property
+    def ned_w_eredivisie_cup(self) -> "LeagueProxy": return LeagueProxy(self, "ned.w.eredivisie_cup")
+
+    @property
+    def ned_w_knvb_cup(self) -> "LeagueProxy": return LeagueProxy(self, "ned.w.knvb_cup")
+
+    @property
+    def nfl(self) -> "LeagueProxy": return LeagueProxy(self, "nfl")
+
+    @property
+    def nga_1(self) -> "LeagueProxy": return LeagueProxy(self, "nga.1")
+
+    @property
+    def nhl(self) -> "LeagueProxy": return LeagueProxy(self, "nhl")
+
+    @property
+    def nll(self) -> "LeagueProxy": return LeagueProxy(self, "nll")
+
+    @property
+    def nonfifa(self) -> "LeagueProxy": return LeagueProxy(self, "nonfifa")
+
+    @property
+    def nor_1(self) -> "LeagueProxy": return LeagueProxy(self, "nor.1")
+
+    @property
+    def nor_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "nor.1.promotion.relegation")
+
+    @property
+    def ntw(self) -> "LeagueProxy": return LeagueProxy(self, "ntw")
+
+    @property
+    def ofc(self) -> "LeagueProxy": return LeagueProxy(self, "ofc")
+
+    @property
+    def olympics_baseball(self) -> "LeagueProxy": return LeagueProxy(self, "olympics-baseball")
+
+    @property
+    def olympics_mens_ice_hockey(self) -> "LeagueProxy": return LeagueProxy(self, "olympics-mens-ice-hockey")
+
+    @property
+    def olympics_womens_ice_hockey(self) -> "LeagueProxy": return LeagueProxy(self, "olympics-womens-ice-hockey")
+
+    @property
+    def other(self) -> "LeagueProxy": return LeagueProxy(self, "other")
+
+    @property
+    def pancrase(self) -> "LeagueProxy": return LeagueProxy(self, "pancrase")
+
+    @property
+    def par_1(self) -> "LeagueProxy": return LeagueProxy(self, "par.1")
+
+    @property
+    def par_1_supercopa(self) -> "LeagueProxy": return LeagueProxy(self, "par.1.supercopa")
+
+    @property
+    def per_1(self) -> "LeagueProxy": return LeagueProxy(self, "per.1")
+
+    @property
+    def pfl(self) -> "LeagueProxy": return LeagueProxy(self, "pfl")
+
+    @property
+    def pga(self) -> "LeagueProxy": return LeagueProxy(self, "pga")
+
+    @property
+    def pll(self) -> "LeagueProxy": return LeagueProxy(self, "pll")
+
+    @property
+    def por_1(self) -> "LeagueProxy": return LeagueProxy(self, "por.1")
+
+    @property
+    def por_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "por.1.promotion.relegation")
+
+    @property
+    def por_taca_portugal(self) -> "LeagueProxy": return LeagueProxy(self, "por.taca.portugal")
+
+    @property
+    def pride(self) -> "LeagueProxy": return LeagueProxy(self, "pride")
+
+    @property
+    def proelite(self) -> "LeagueProxy": return LeagueProxy(self, "proelite")
+
+    @property
+    def puerto_rican_winter_league(self) -> "LeagueProxy": return LeagueProxy(self, "puerto-rican-winter-league")
+
+    @property
+    def rfa(self) -> "LeagueProxy": return LeagueProxy(self, "rfa")
+
+    @property
+    def rizin(self) -> "LeagueProxy": return LeagueProxy(self, "rizin")
+
+    @property
+    def roc(self) -> "LeagueProxy": return LeagueProxy(self, "roc")
+
+    @property
+    def rsa_1(self) -> "LeagueProxy": return LeagueProxy(self, "rsa.1")
+
+    @property
+    def rsa_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "rsa.1.promotion.relegation")
+
+    @property
+    def rsa_2(self) -> "LeagueProxy": return LeagueProxy(self, "rsa.2")
+
+    @property
+    def rsa_mtn8(self) -> "LeagueProxy": return LeagueProxy(self, "rsa.mtn8")
+
+    @property
+    def rus_1(self) -> "LeagueProxy": return LeagueProxy(self, "rus.1")
+
+    @property
+    def rus_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "rus.1.promotion.relegation")
+
+    @property
+    def sco_1(self) -> "LeagueProxy": return LeagueProxy(self, "sco.1")
+
+    @property
+    def sco_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "sco.1.promotion.relegation")
+
+    @property
+    def sco_2(self) -> "LeagueProxy": return LeagueProxy(self, "sco.2")
+
+    @property
+    def sco_2_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "sco.2.promotion.relegation")
+
+    @property
+    def sco_challenge(self) -> "LeagueProxy": return LeagueProxy(self, "sco.challenge")
+
+    @property
+    def sco_cis(self) -> "LeagueProxy": return LeagueProxy(self, "sco.cis")
+
+    @property
+    def sco_tennents(self) -> "LeagueProxy": return LeagueProxy(self, "sco.tennents")
+
+    @property
+    def sfl(self) -> "LeagueProxy": return LeagueProxy(self, "sfl")
+
+    @property
+    def sgp_1(self) -> "LeagueProxy": return LeagueProxy(self, "sgp.1")
+
+    @property
+    def shark_fights(self) -> "LeagueProxy": return LeagueProxy(self, "shark-fights")
+
+    @property
+    def shooto_brazil(self) -> "LeagueProxy": return LeagueProxy(self, "shooto-brazil")
+
+    @property
+    def shooto_japan(self) -> "LeagueProxy": return LeagueProxy(self, "shooto-japan")
+
+    @property
+    def shoxc(self) -> "LeagueProxy": return LeagueProxy(self, "shoxc")
+
+    @property
+    def slv_1(self) -> "LeagueProxy": return LeagueProxy(self, "slv.1")
+
+    @property
+    def strikeforce(self) -> "LeagueProxy": return LeagueProxy(self, "strikeforce")
+
+    @property
+    def swe_1(self) -> "LeagueProxy": return LeagueProxy(self, "swe.1")
+
+    @property
+    def swe_1_promotion_relegation(self) -> "LeagueProxy": return LeagueProxy(self, "swe.1.promotion.relegation")
+
+    @property
+    def tfc(self) -> "LeagueProxy": return LeagueProxy(self, "tfc")
+
+    @property
+    def tgl(self) -> "LeagueProxy": return LeagueProxy(self, "tgl")
+
+    @property
+    def tha_1(self) -> "LeagueProxy": return LeagueProxy(self, "tha.1")
+
+    @property
+    def tpf(self) -> "LeagueProxy": return LeagueProxy(self, "tpf")
+
+    @property
+    def tur_1(self) -> "LeagueProxy": return LeagueProxy(self, "tur.1")
+
+    @property
+    def uefa_champions(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.champions")
+
+    @property
+    def uefa_champions_qual(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.champions_qual")
+
+    @property
+    def uefa_euro(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.euro")
+
+    @property
+    def uefa_euro_u19(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.euro.u19")
+
+    @property
+    def uefa_euro_u21(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.euro_u21")
+
+    @property
+    def uefa_euro_u21_qual(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.euro_u21_qual")
+
+    @property
+    def uefa_europa(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.europa")
+
+    @property
+    def uefa_europa_conf(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.europa.conf")
+
+    @property
+    def uefa_europa_conf_qual(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.europa.conf_qual")
+
+    @property
+    def uefa_europa_qual(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.europa_qual")
+
+    @property
+    def uefa_euroq(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.euroq")
+
+    @property
+    def uefa_nations(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.nations")
+
+    @property
+    def uefa_super_cup(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.super_cup")
+
+    @property
+    def uefa_w_europa(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.w.europa")
+
+    @property
+    def uefa_w_nations(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.w.nations")
+
+    @property
+    def uefa_wchampions(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.wchampions")
+
+    @property
+    def uefa_weuro(self) -> "LeagueProxy": return LeagueProxy(self, "uefa.weuro")
+
+    @property
+    def ufc(self) -> "LeagueProxy": return LeagueProxy(self, "ufc")
+
+    @property
+    def ufl(self) -> "LeagueProxy": return LeagueProxy(self, "ufl")
+
+    @property
+    def uga_1(self) -> "LeagueProxy": return LeagueProxy(self, "uga.1")
+
+    @property
+    def uru_1(self) -> "LeagueProxy": return LeagueProxy(self, "uru.1")
+
+    @property
+    def uru_2(self) -> "LeagueProxy": return LeagueProxy(self, "uru.2")
+
+    @property
+    def usa_1(self) -> "LeagueProxy": return LeagueProxy(self, "usa.1")
+
+    @property
+    def usa_ncaa_m_1(self) -> "LeagueProxy": return LeagueProxy(self, "usa.ncaa.m.1")
+
+    @property
+    def usa_ncaa_w_1(self) -> "LeagueProxy": return LeagueProxy(self, "usa.ncaa.w.1")
+
+    @property
+    def usa_nwsl(self) -> "LeagueProxy": return LeagueProxy(self, "usa.nwsl")
+
+    @property
+    def usa_nwsl_cup(self) -> "LeagueProxy": return LeagueProxy(self, "usa.nwsl.cup")
+
+    @property
+    def usa_nwsl_summer_cup(self) -> "LeagueProxy": return LeagueProxy(self, "usa.nwsl.summer.cup")
+
+    @property
+    def usa_open(self) -> "LeagueProxy": return LeagueProxy(self, "usa.open")
+
+    @property
+    def usa_usl_1(self) -> "LeagueProxy": return LeagueProxy(self, "usa.usl.1")
+
+    @property
+    def usa_usl_l1(self) -> "LeagueProxy": return LeagueProxy(self, "usa.usl.l1")
+
+    @property
+    def usa_usl_l1_cup(self) -> "LeagueProxy": return LeagueProxy(self, "usa.usl.l1.cup")
+
+    @property
+    def usa_w_usl_1(self) -> "LeagueProxy": return LeagueProxy(self, "usa.w.usl.1")
+
+    @property
+    def ven_1(self) -> "LeagueProxy": return LeagueProxy(self, "ven.1")
+
+    @property
+    def venezuelan_winter_league(self) -> "LeagueProxy": return LeagueProxy(self, "venezuelan-winter-league")
+
+    @property
+    def vfc(self) -> "LeagueProxy": return LeagueProxy(self, "vfc")
+
+    @property
+    def wec(self) -> "LeagueProxy": return LeagueProxy(self, "wec")
+
+    @property
+    def wnba(self) -> "LeagueProxy": return LeagueProxy(self, "wnba")
+
+    @property
+    def womens_college_basketball(self) -> "LeagueProxy": return LeagueProxy(self, "womens-college-basketball")
+
+    @property
+    def womens_college_field_hockey(self) -> "LeagueProxy": return LeagueProxy(self, "womens-college-field-hockey")
+
+    @property
+    def womens_college_hockey(self) -> "LeagueProxy": return LeagueProxy(self, "womens-college-hockey")
+
+    @property
+    def womens_college_lacrosse(self) -> "LeagueProxy": return LeagueProxy(self, "womens-college-lacrosse")
+
+    @property
+    def womens_college_volleyball(self) -> "LeagueProxy": return LeagueProxy(self, "womens-college-volleyball")
+
+    @property
+    def womens_college_water_polo(self) -> "LeagueProxy": return LeagueProxy(self, "womens-college-water-polo")
+
+    @property
+    def womens_olympics_basketball(self) -> "LeagueProxy": return LeagueProxy(self, "womens-olympics-basketball")
+
+    @property
+    def womens_olympics_golf(self) -> "LeagueProxy": return LeagueProxy(self, "womens-olympics-golf")
+
+    @property
+    def world_baseball_classic(self) -> "LeagueProxy": return LeagueProxy(self, "world-baseball-classic")
+
+    @property
+    def wta(self) -> "LeagueProxy": return LeagueProxy(self, "wta")
+
+    @property
+    def xfc(self) -> "LeagueProxy": return LeagueProxy(self, "xfc")
+
+    @property
+    def xfl(self) -> "LeagueProxy": return LeagueProxy(self, "xfl")
 
     def __getattr__(self, name: str) -> LeagueProxy:
         """
