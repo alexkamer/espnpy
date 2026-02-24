@@ -17,6 +17,23 @@ class LeagueProxy:
         """Fetch all teams for this league."""
         return await self._client.get_teams(self.league)
 
+    async def team(self, team_id: str) -> Dict[str, Any]:
+        """Fetch general information for a specific team in this league by their ID.
+        
+        Args:
+            team_id: The ID of the team (e.g. '1' for Atlanta Falcons).
+        """
+        return await self._client.get_team(self.league, team_id)
+
+    async def schedule(self, team_id: str, season: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch the full schedule of games for a specific team in this league.
+        
+        Args:
+            team_id: The ID of the team.
+            season: The explicit year string (e.g. '2023').
+        """
+        return await self._client.get_team_schedule(self.league, team_id, season=season)
+
     async def athletes(self, active: Optional[bool] = None) -> List[Dict[str, Any]]:
         """Fetch all athletes/players for this league.
         
@@ -408,7 +425,13 @@ class ESPNClient:
                     t_name = team_info.get("displayName")
                     t_id = team_info.get("id")
                     t_logo = team_info.get("logo")
-                    score = comp.get("score")
+                    
+                    # Score can sometimes be a string on scoreboard, but a dict on team_schedule
+                    score_raw = comp.get("score")
+                    if isinstance(score_raw, dict):
+                        score = score_raw.get("displayValue")
+                    else:
+                        score = score_raw
                     
                     if comp.get("homeAway") == "home":
                         home_team, home_team_id, home_score, home_logo = t_name, t_id, score, t_logo
@@ -712,6 +735,64 @@ class ESPNClient:
             })
             
         return organized_odds
+
+    async def get_team(self, league: str, team_id: str, sport: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch general information for a specific team by their ID.
+        
+        Args:
+            league: The league (e.g., 'nfl').
+            team_id: The unique ID of the team.
+            sport: Automatically inferred if not provided.
+            
+        Returns:
+            A dictionary containing the team's location, name, colors, and logos.
+        """
+        resolved_sport = self._resolve_sport(league, sport)
+        
+        # Team details live on the SITE API
+        # Example: https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/1
+        raw_data = await self._get(f"sports/{resolved_sport}/{league}/teams/{team_id}", base_url=self.SITE_BASE_URL)
+        team_info = raw_data.get("team", {})
+        
+        return {
+            "id": team_info.get("id"),
+            "slug": team_info.get("slug"),
+            "location": team_info.get("location"),
+            "name": team_info.get("name"),
+            "nickname": team_info.get("nickname"),
+            "abbreviation": team_info.get("abbreviation"),
+            "displayName": team_info.get("displayName"),
+            "shortDisplayName": team_info.get("shortDisplayName"),
+            "color": team_info.get("color"),
+            "alternateColor": team_info.get("alternateColor"),
+            "isActive": team_info.get("isActive", True),
+            "logo": team_info.get("logos", [{}])[0].get("href") if team_info.get("logos") else None,
+            "standingSummary": team_info.get("standingSummary")
+        }
+
+    async def get_team_schedule(self, league: str, team_id: str, season: Optional[str] = None, sport: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch the full schedule of games for a specific team.
+        
+        Args:
+            league: The league (e.g., 'nfl').
+            team_id: The unique ID of the team.
+            season: The year string (e.g. '2023'). If omitted, fetches the current season.
+            sport: Automatically inferred if not provided.
+            
+        Returns:
+            A standardized list of flattened game dictionaries identical to the `scoreboard()` output.
+        """
+        resolved_sport = self._resolve_sport(league, sport)
+        params = {}
+        if season:
+            params["season"] = season
+            
+        # Team schedules live on the SITE API
+        raw_data = await self._get(f"sports/{resolved_sport}/{league}/teams/{team_id}/schedule", params=params, base_url=self.SITE_BASE_URL)
+        
+        # ESPN's team schedule returns an "events" array identical to the scoreboard endpoint!
+        # We can magically reuse the exact same flattening function.
+        return self._standardize_scoreboard(raw_data)
 
     # ---------------------------------------------------------
     # Syntactic Sugar / Dot-Notation Handlers
