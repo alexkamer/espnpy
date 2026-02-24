@@ -99,13 +99,16 @@ espnpy.college_softball.news()
 Once you have accessed a league via the proxy (e.g. `espnpy.nba`), you have access to the following standardized methods:
 
 - `await espnpy.nba.teams()`: All teams in the league.
+- `await espnpy.nba.team(team_id)`: A specific team's details, colors, and current standing.
 - `await espnpy.nba.roster(team_id)`: The active roster for a specific team.
 - `await espnpy.nba.athletes(active=True)`: All athletes in the league.
 - `await espnpy.nba.athlete(athlete_id)`: A specific athlete's details.
 - `await espnpy.nba.athlete_stats(athlete_id)`: Advanced statistical splits (e.g., Home vs Away records).
 - `await espnpy.nba.standings()`: The full league standings, ordered by win percentage.
+- `await espnpy.nba.schedule(team_id, season="YYYY")`: The full season schedule and results for a specific team.
 - `await espnpy.nba.scoreboard(date="YYYYMMDD")`: The schedule/scores for a day (or current week if omitted).
 - `await espnpy.nba.game_summary(event_id)`: Boxscore, play-by-play, and betting odds for a specific game.
+- `await espnpy.nba.odds(event_id)`: Detailed betting lines from multiple sportsbooks.
 - `await espnpy.nba.news(team_id=None, limit=50)`: The latest news headlines.
 
 *(If you require the raw, unparsed JSON from ESPN for advanced data extraction, you can pass `raw=True` to methods like `scoreboard()`.)*
