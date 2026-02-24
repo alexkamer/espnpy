@@ -1,35 +1,32 @@
 # The `LeagueProxy` Architecture
 
-ESPN's API requires you to specify both the **Sport** (e.g., `football`) and the **League** (e.g., `nfl`) for every request. `espnpy` abstracts this away by automatically mapping 384+ leagues to their respective sports.
+ESPN's undocumented API requires you to specify both the **Sport** (e.g., `football`) and the **League** (e.g., `nfl`) for every request. `espnpy` completely abstracts this away. 
 
-### Explicit Shortcuts
-The most common American sports leagues are defined explicitly so they instantly appear in your IDE's Autocomplete (VSCode, PyCharm).
-- `espnpy.nfl`
-- `espnpy.nba`
-- `espnpy.mlb`
-- `espnpy.nhl`
-- `espnpy.wnba`
-- `espnpy.college_football`
-- `espnpy.mens_college_basketball`
+It automatically maps over 384+ leagues to their respective sports.
 
-### Dynamic Proxies (The "Hidden Magic")
-If a league isn't explicitly defined above, you can still access it dynamically via Python dot-notation. The package will automatically convert underscores (`_`) into the hyphens (`-`) or dots (`.`) that ESPN requires.
+### Perfect IDE Autocomplete
+Every single one of the 384+ leagues is explicitly exposed in the root package module. This means you don't need to read documentation or memorize ESPN IDs to find the league you want.
 
-**Examples:**
+When using VSCode, PyCharm, or any modern IDE, simply type `espnpy.` and a dropdown menu will instantly appear with every supported league.
+
 ```python
 import espnpy
 import asyncio
 
 async def test_leagues():
+    # Popular American Leagues
+    nba_teams = await espnpy.nba.teams()
+    nfl_scores = await espnpy.nfl.scoreboard()
+
     # English Premier League Soccer (ESPN ID: eng.1)
-    # The underscore is automatically converted to a dot.
-    epl = await espnpy.eng_1.teams()
+    # The dot in the ESPN ID is automatically converted to an underscore.
+    epl_news = await espnpy.eng_1.news()
 
     # College Softball (ESPN ID: college-softball)
-    # The underscore is automatically converted to a hyphen.
-    softball = await espnpy.college_softball.news()
+    # The hyphen in the ESPN ID is automatically converted to an underscore.
+    softball_roster = await espnpy.college_softball.roster("12")
 
-    # Mexican Winter League Baseball
+    # Obscure International Leagues
     mexico = await espnpy.mexican_winter_league.standings()
 
 asyncio.run(test_leagues())
