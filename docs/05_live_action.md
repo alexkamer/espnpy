@@ -2,7 +2,7 @@
 
 These endpoints pull data that is often updating live during game days. They hit ESPN's presentation APIs, pulling pre-flattened JSON ready for display.
 
-## 1. The Scoreboard (Schedule & Live Scores)
+## 1. The Scoreboard (Daily Schedule & Live Scores)
 Returns a completely flattened, standardized list of every game played (or scheduled to be played) on a specific date. 
 
 ```python
@@ -50,7 +50,21 @@ asyncio.run(test_scoreboard())
 ]
 ```
 
-## 2. Game Summary (Boxscores, Play-by-Play, Odds)
+## 2. A Specific Team's Schedule
+If you don't want to query the entire league-wide scoreboard across 18 weeks just to find the games for a specific team, you can use `.schedule(team_id)`.
+
+*(Note: The output dictionary schema is 100% identical to the `scoreboard()` output!)*
+
+```python
+# '1' is the Atlanta Falcons (NFL). We ask for their 2023 schedule.
+schedule = await espnpy.nfl.schedule("1", season="2023")
+
+for game in schedule:
+    print(f"[{game['date']}] {game['awayTeam']} at {game['homeTeam']}")
+    print(f"Result: {game['awayScore']} - {game['homeScore']} ({game['status']})")
+```
+
+## 3. Game Summary (Boxscores, Play-by-Play, Odds)
 Pass a specific Game ID (found via the `scoreboard` method) to get the final boxscore, the play-by-play log, and betting odds.
 
 ```python
@@ -130,7 +144,7 @@ for player in summary['boxscore']['players'][:2]:
 }
 ```
 
-## 3. Advanced Odds (Multiple Sportsbooks)
+## 4. Advanced Odds (Multiple Sportsbooks)
 While `game_summary` provides a single "consensus" betting line, you can fetch the opening, closing, and current betting lines from over a dozen individual sportsbooks (like DraftKings, FanDuel, and Caesars) directly using the `odds()` endpoint.
 
 ```python

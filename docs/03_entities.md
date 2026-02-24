@@ -70,13 +70,26 @@ asyncio.run(test_teams())
     "color": "a71930",
     "alternateColor": "000000",
     "isActive": true,
-    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png"
+    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
+    "standingSummary": "1st in NFC South"
   },
   ...
 ]
 ```
 
-## 2. Get the Current Roster for a Team
+## 3. Get a Specific Team
+If you just want a single team's details without downloading the entire league, pass their ID.
+
+```python
+falcons = await espnpy.nfl.team("1")
+
+print(f"Name: {falcons['displayName']}")
+print(f"Abbreviation: {falcons['abbreviation']}")
+print(f"Colors: #{falcons['color']}, #{falcons['alternateColor']}")
+print(f"Current Status: {falcons['standingSummary']}") # e.g. "1st in NFC South"
+```
+
+## 4. Get the Current Roster for a Team
 Pass the ESPN Team ID. This exclusively returns the **current** active roster for that specific team. The output is a standardized list of dictionaries containing every player's detailed biographical information.
 
 ```python
@@ -123,7 +136,7 @@ asyncio.run(test_roster())
 ]
 ```
 
-## 3. Get All Athletes in a League
+## 5. Get All Athletes in a League
 This endpoint pulls every active player in the league. It safely downloads thousands of URLs simultaneously without crashing your internet connection.
 
 ```python
@@ -133,7 +146,7 @@ nhl_players = await espnpy.nhl.athletes(active=True)
 print(f"Total Active NHL Players: {len(nhl_players)}")
 ```
 
-## 4. Get a Specific Athlete
+## 6. Get a Specific Athlete
 Pass the ESPN Athlete ID to retrieve their biographical details. `teamId` is dynamically inferred and appended.
 
 ```python
