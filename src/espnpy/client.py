@@ -506,6 +506,18 @@ class ESPNClient:
                     "differential": stats_dict.get("differential", "0")
                 })
                 
+        # Sort standings descending by win percentage (so index 0 is always the actual leader)
+        def parse_win_percent(pct_str: str) -> float:
+            try:
+                # Handle standard "0.500" or ".500" strings. If missing, return 0.
+                if not pct_str or pct_str == "-":
+                    return 0.0
+                return float(pct_str)
+            except ValueError:
+                return 0.0
+
+        organized_standings.sort(key=lambda x: parse_win_percent(x["winPercent"]), reverse=True)
+                
         return organized_standings
 
     # ---------------------------------------------------------
