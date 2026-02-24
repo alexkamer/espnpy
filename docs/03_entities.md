@@ -1,15 +1,79 @@
-# Core Entities: Teams & Athletes
+# Core Entities: Sports, Teams & Athletes
 
-These endpoints pull static, highly detailed data regarding the structure of the league.
+These endpoints pull static, highly detailed data regarding the structure of ESPN's sports database.
 
-## 1. Get All Teams in a League
-Returns a list of every team in a given league.
+## 1. Discovering Sports & Leagues
+While `espnpy` handles 384+ leagues automatically via dot-notation, you can still manually query ESPN to discover what sports and leagues exist on their backend using the core client methods.
 
 ```python
 import espnpy
-teams = await espnpy.nfl.teams()
-print(f"Total Teams: {len(teams)}")
-print(teams[0]["displayName"]) # "Atlanta Falcons"
+import asyncio
+
+async def test_discovery():
+    # 1. Fetch all root sports (e.g. "football", "basketball")
+    # You must use the internal _default_client for non-league specific requests
+    sports = await espnpy._default_client.get_sports()
+    print(f"Total Sports Found: {sports['count']}")
+
+    # 2. Fetch all leagues within a specific sport
+    baseball_leagues = await espnpy._default_client.get_leagues("baseball")
+    for league in baseball_leagues[:2]:
+        print(f"{league['name']} (ID: {league['id']}, Slug: {league['slug']})")
+
+asyncio.run(test_discovery())
+```
+
+### Expected Output Structure (For Leagues):
+```json
+[
+  {
+    "id": "10",
+    "name": "Major League Baseball",
+    "displayName": "Major League Baseball",
+    "abbreviation": "MLB",
+    "shortName": "MLB",
+    "slug": "mlb",
+    "logo": "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png"
+  },
+  ...
+]
+```
+
+## 2. Get All Teams in a League
+Returns a list of every team in a given league, automatically handling backend pagination for massive leagues.
+
+```python
+import espnpy
+import asyncio
+
+async def test_teams():
+    # Fetch all 32 NFL Teams
+    teams = await espnpy.nfl.teams()
+    print(f"Total Teams: {len(teams)}")
+    print(teams[0]["displayName"]) # "Atlanta Falcons"
+
+asyncio.run(test_teams())
+```
+
+### Expected Output Structure:
+```json
+[
+  {
+    "id": "1",
+    "slug": "atlanta-falcons",
+    "location": "Atlanta",
+    "name": "Falcons",
+    "nickname": "Falcons",
+    "abbreviation": "ATL",
+    "displayName": "Atlanta Falcons",
+    "shortDisplayName": "Falcons",
+    "color": "a71930",
+    "alternateColor": "000000",
+    "isActive": true,
+    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png"
+  },
+  ...
+]
 ```
 
 ## 2. Get the Current Roster for a Team
