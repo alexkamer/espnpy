@@ -56,15 +56,17 @@ class LeagueProxy:
         """Fetch advanced statistical splits (Home vs Away, Season Totals) for a specific athlete."""
         return await self._client.get_athlete_stats(self.league, athlete_id)
 
-    async def scoreboard(self, date: Optional[str] = None, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
+    async def scoreboard(self, date: Optional[str] = None, group: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
         Args:
             date: The date string in 'YYYYMMDD' format. If not provided, returns current/upcoming games.
+            group: Optional ESPN group ID filter (e.g. group="50" for full Men's College Basketball).
+            limit: The maximum number of games to return (max 1000).
             raw: If True, returns the massive raw JSON from ESPN. If False (default), 
                  returns a standardized list of flattened game dictionaries.
         """
-        return await self._client.get_scoreboard(self.league, date=date, raw=raw)
+        return await self._client.get_scoreboard(self.league, date=date, group=group, limit=limit, raw=raw)
 
     async def game_summary(self, event_id: str) -> Dict[str, Any]:
         """Fetch the detailed game summary (boxscore, play-by-play, odds) for a specific event.
@@ -366,14 +368,17 @@ class ESPNClient:
             "players": list(players_dict.values())
         }
 
-    async def get_scoreboard(self, league: str, date: Optional[str] = None, sport: Optional[str] = None, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
+    async def get_scoreboard(self, league: str, date: Optional[str] = None, sport: Optional[str] = None, group: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
         Args:
             league: The league (e.g., 'nfl').
-            date: The date string in 'YYYYMMDD' format (e.g., '20240101'). 
-                  If not provided, returns today's/current week's scoreboard.
+            date: The date string in 'YYYYMMDD' format. If not provided, returns current/upcoming games.
             sport: Automatically inferred if not provided.
+            group: An optional ESPN group ID to filter the games. 
+                   Extremely useful for college sports where the default scoreboard only shows Top 25 games.
+                   (e.g., Use group="50" for all Division I Men's College Basketball games).
+            limit: Maximum number of games to return. Defaults to 1000 to ensure full slates are captured.
             raw: If True, returns the massive raw JSON from ESPN. If False (default), 
                  returns a standardized list of flattened game dictionaries.
             
@@ -381,9 +386,11 @@ class ESPNClient:
             A list of standardized game dictionaries, or the raw JSON dictionary if raw=True.
         """
         resolved_sport = self._resolve_sport(league, sport)
-        params = {}
+        params = {"limit": limit}
         if date:
             params["dates"] = date
+        if group:
+            params["groups"] = group
             
         # The Scoreboard lives on the SITE API
         raw_data = await self._get(f"sports/{resolved_sport}/{league}/scoreboard", params=params, base_url=self.SITE_BASE_URL)

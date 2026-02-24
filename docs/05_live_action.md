@@ -20,6 +20,13 @@ async def test_scoreboard():
         print(f"Score: {game['awayScore']} - {game['homeScore']}")
         print(f"TV: {', '.join(game['broadcasts'])}")
 
+    # For massive leagues like Men's College Basketball, ESPN only returns Top-25 matchups by default.
+    # You can pass the optional `group` parameter to fetch EVERY game.
+    # Group '50' = All NCAA Division 1 Basketball games.
+    # Group '80' = All NCAA FBS Football games.
+    div1_games = await espnpy.mens_college_basketball.scoreboard(date="20240224", group="50")
+    print(f"Total Division 1 Games: {len(div1_games)}")
+
 asyncio.run(test_scoreboard())
 ```
 
