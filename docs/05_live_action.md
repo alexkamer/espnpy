@@ -66,8 +66,9 @@ for play in summary['plays'][-3:]: # Print the final 3 plays
     if play['scoringPlay']:
         print("^^^ THIS WAS A SCORING PLAY! ^^^")
 
-# 3. Boxscore
-# summary['boxscore'] contains the raw, nested ESPN dictionary of every player's exact stats for that game.
+# 3. Boxscore (Teams & Players)
+for player in summary['boxscore']['players'][:2]:
+    print(f"{player['name']}: {player['stats']}")
 ```
 
 ### Expected Output Structure:
@@ -89,11 +90,34 @@ for play in summary['plays'][-3:]: # Print the final 3 plays
       "scoreValue": 1
     }
   ],
-  "gameInfo": {
-    ...
-  },
   "boxscore": {
-    ...
+    "teams": [
+       {
+         "id": "1",
+         "name": "Atlanta Falcons",
+         "abbreviation": "ATL",
+         "stats": {
+           "1st Downs": "20",
+           "Total Yards": "221"
+         }
+       }
+    ],
+    "players": [
+       {
+         "id": "4685720",
+         "teamId": "29",
+         "name": "Bryce Young",
+         "stats": {
+            "passing": {
+               "YDS": "146",
+               "TD": "1"
+            },
+            "rushing": {
+               "YDS": "17"
+            }
+         }
+       }
+    ]
   }
 }
 ```

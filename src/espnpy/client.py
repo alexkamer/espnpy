@@ -270,6 +270,70 @@ class ESPNClient:
             
         return organized_teams
 
+    def _standardize_boxscore(self, box_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Flatten the nested ESPN boxscore JSON into cleanly organized team and player dictionaries."""
+        if not box_data:
+            return {}
+            
+        # Standardize Teams
+        teams_list = []
+        for team_data in box_data.get("teams", []):
+            t_info = team_data.get("team", {})
+            stats_dict = {}
+            for s in team_data.get("statistics", []):
+                label = s.get("label") or s.get("name")
+                val = s.get("displayValue")
+                if label:
+                    stats_dict[label] = val
+                    
+            teams_list.append({
+                "id": t_info.get("id"),
+                "name": t_info.get("displayName"),
+                "abbreviation": t_info.get("abbreviation"),
+                "stats": stats_dict
+            })
+            
+        # Standardize Players
+        players_dict = {}
+        for team_roster in box_data.get("players", []):
+            t_info = team_roster.get("team", {})
+            team_id = t_info.get("id")
+            
+            for category in team_roster.get("statistics", []):
+                cat_name = category.get("name")
+                labels = category.get("labels", [])
+                
+                for ath in category.get("athletes", []):
+                    a_info = ath.get("athlete", {})
+                    a_id = a_info.get("id")
+                    
+                    if not a_id:
+                        continue
+                        
+                    if a_id not in players_dict:
+                        players_dict[a_id] = {
+                            "id": a_id,
+                            "teamId": team_id,
+                            "name": a_info.get("displayName"),
+                            "shortName": a_info.get("shortName"),
+                            "stats": {}
+                        }
+                    
+                    # Zip the labels and values
+                    stat_values = ath.get("stats", [])
+                    zipped_stats = dict(zip(labels, stat_values))
+                    
+                    if cat_name:
+                        players_dict[a_id]["stats"][cat_name] = zipped_stats
+                    else:
+                        # If there's no category name (like in the NBA), merge directly into the root stats
+                        players_dict[a_id]["stats"].update(zipped_stats)
+                        
+        return {
+            "teams": teams_list,
+            "players": list(players_dict.values())
+        }
+
     async def get_scoreboard(self, league: str, date: Optional[str] = None, sport: Optional[str] = None, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
@@ -379,7 +443,7 @@ class ESPNClient:
         raw_data = await self._get(f"sports/{resolved_sport}/{league}/summary", params=params, base_url=self.SITE_BASE_URL)
         
         # Standardize the output
-        boxscore = raw_data.get("boxscore", {})
+        boxscore = self._standardize_boxscore(raw_data.get("boxscore", {}))
         
         # Extract betting odds safely
         pickcenter = raw_data.get("pickcenter", [])
