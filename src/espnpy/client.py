@@ -35,6 +35,10 @@ class LeagueProxy:
         """
         return await self._client.get_athlete(self.league, athlete_id)
 
+    async def athlete_stats(self, athlete_id: str) -> Dict[str, Any]:
+        """Fetch advanced statistical splits (Home vs Away, Season Totals) for a specific athlete."""
+        return await self._client.get_athlete_stats(self.league, athlete_id)
+
     async def scoreboard(self, date: Optional[str] = None, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
@@ -527,6 +531,43 @@ class ESPNClient:
         organized_standings.sort(key=lambda x: parse_win_percent(x["winPercent"]), reverse=True)
                 
         return organized_standings
+
+    async def get_athlete_stats(self, league: str, athlete_id: str, sport: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch advanced statistical splits (Home vs Away, Wins vs Losses, Season Totals) for an athlete.
+        
+        Args:
+            league: The league (e.g., 'nfl').
+            athlete_id: The unique ID of the athlete.
+            sport: Automatically inferred if not provided.
+            
+        Returns:
+            A standardized dictionary mapping categories (e.g. 'Wins/Ties', 'Home') to their specific stat totals.
+        """
+        resolved_sport = self._resolve_sport(league, sport)
+        
+        # Advanced stats live on the v3 COMMON API
+        # Example: https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/3139477/splits
+        url = f"https://site.web.api.espn.com/apis/common/v3/sports/{resolved_sport}/{league}/athletes/{athlete_id}/splits"
+        raw_data = await self.get_url(url)
+        
+        organized_stats = {}
+        
+        # ESPN provides a master list of labels (e.g., ['CMP', 'ATT', 'YDS']) for this specific athlete
+        labels = raw_data.get("labels", [])
+        
+        # ESPN then provides a massive array of "splits" (e.g., 'Home', 'Away', 'Wins', 'Losses', 'Last 4 Weeks')
+        # Each split contains an array of string values that perfectly map 1-to-1 with the master labels list.
+        for category in raw_data.get("splitCategories", []):
+            for split in category.get("splits", []):
+                split_name = split.get("displayName")
+                stat_values = split.get("stats", [])
+                
+                # Zip the master labels with this specific split's values into a clean dictionary
+                if split_name and len(labels) == len(stat_values):
+                    stats_dict = dict(zip(labels, stat_values))
+                    organized_stats[split_name] = stats_dict
+                    
+        return organized_stats
 
     # ---------------------------------------------------------
     # Syntactic Sugar / Dot-Notation Handlers
