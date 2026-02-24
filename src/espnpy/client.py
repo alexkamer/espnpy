@@ -494,6 +494,8 @@ class ESPNClient:
                 organized_standings.append({
                     "teamId": team_info.get("id", ""),
                     "team": team_info.get("displayName", ""),
+                    "teamAbbreviation": team_info.get("abbreviation", ""),
+                    "logo": team_info.get("logos", [{}])[0].get("href") if team_info.get("logos") else None,
                     "group": group_name,
                     "wins": stats_dict.get("wins", "0"),
                     "losses": stats_dict.get("losses", "0"),
@@ -503,7 +505,11 @@ class ESPNClient:
                     "streak": stats_dict.get("streak", "-"),
                     "pointsFor": stats_dict.get("pointsFor", "0"),
                     "pointsAgainst": stats_dict.get("pointsAgainst", "0"),
-                    "differential": stats_dict.get("differential", "0")
+                    "differential": stats_dict.get("differential", "0"),
+                    "homeRecord": stats_dict.get("Home", "-"),
+                    "awayRecord": stats_dict.get("Road", "-"),
+                    "divisionRecord": stats_dict.get("vs. Div.", "-"),
+                    "playoffSeed": stats_dict.get("playoffSeed", "-")
                 })
                 
         # Sort standings descending by win percentage (so index 0 is always the actual leader)
