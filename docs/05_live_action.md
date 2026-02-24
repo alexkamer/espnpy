@@ -26,6 +26,13 @@ async def test_scoreboard():
     # Group '80' = All NCAA FBS Football games.
     div1_games = await espnpy.mens_college_basketball.scoreboard(date="20240224", group="50")
     print(f"Total Division 1 Games: {len(div1_games)}")
+    
+    # You can also filter by `season_type`! (1 = Preseason, 2 = Regular Season, 3 = Postseason)
+    # If you omit the date but provide a season_type, it returns ALL upcoming games for that phase.
+    playoffs = await espnpy.nfl.scoreboard(season_type="3")
+    for game in playoffs:
+        # The standardized dictionary also exposes the season year and slug for every game
+        print(f"[{game['seasonYear']} {game['seasonSlug']}] {game['name']}")
 
 asyncio.run(test_scoreboard())
 ```
@@ -40,6 +47,9 @@ asyncio.run(test_scoreboard())
     "date": "2023-09-10T17:00Z",
     "name": "Carolina Panthers at Atlanta Falcons",
     "shortName": "CAR @ ATL",
+    "seasonYear": 2023,
+    "seasonType": 2,
+    "seasonSlug": "regular-season",
     "status": "Final",
     "clock": "0:00",
     "period": 4,

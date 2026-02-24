@@ -56,17 +56,18 @@ class LeagueProxy:
         """Fetch advanced statistical splits (Home vs Away, Season Totals) for a specific athlete."""
         return await self._client.get_athlete_stats(self.league, athlete_id)
 
-    async def scoreboard(self, date: Optional[str] = None, group: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
+    async def scoreboard(self, date: Optional[str] = None, group: Optional[str] = None, season_type: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
         Args:
             date: The date string in 'YYYYMMDD' format. If not provided, returns current/upcoming games.
             group: Optional ESPN group ID filter (e.g. group="50" for full Men's College Basketball).
+            season_type: Optional ESPN season type ID (1=Preseason, 2=Regular Season, 3=Postseason).
             limit: The maximum number of games to return (max 1000).
             raw: If True, returns the massive raw JSON from ESPN. If False (default), 
                  returns a standardized list of flattened game dictionaries.
         """
-        return await self._client.get_scoreboard(self.league, date=date, group=group, limit=limit, raw=raw)
+        return await self._client.get_scoreboard(self.league, date=date, group=group, season_type=season_type, limit=limit, raw=raw)
 
     async def game_summary(self, event_id: str) -> Dict[str, Any]:
         """Fetch the detailed game summary (boxscore, play-by-play, odds) for a specific event.
@@ -368,7 +369,7 @@ class ESPNClient:
             "players": list(players_dict.values())
         }
 
-    async def get_scoreboard(self, league: str, date: Optional[str] = None, sport: Optional[str] = None, group: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
+    async def get_scoreboard(self, league: str, date: Optional[str] = None, sport: Optional[str] = None, group: Optional[str] = None, season_type: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
         Args:
@@ -378,6 +379,7 @@ class ESPNClient:
             group: An optional ESPN group ID to filter the games. 
                    Extremely useful for college sports where the default scoreboard only shows Top 25 games.
                    (e.g., Use group="50" for all Division I Men's College Basketball games).
+            season_type: An optional ESPN season type ID (1=Preseason, 2=Regular Season, 3=Postseason).
             limit: Maximum number of games to return. Defaults to 1000 to ensure full slates are captured.
             raw: If True, returns the massive raw JSON from ESPN. If False (default), 
                  returns a standardized list of flattened game dictionaries.
@@ -391,6 +393,8 @@ class ESPNClient:
             params["dates"] = date
         if group:
             params["groups"] = group
+        if season_type:
+            params["seasontype"] = season_type
             
         # The Scoreboard lives on the SITE API
         raw_data = await self._get(f"sports/{resolved_sport}/{league}/scoreboard", params=params, base_url=self.SITE_BASE_URL)
@@ -407,12 +411,18 @@ class ESPNClient:
             try:
                 competition = event.get("competitions", [])[0]
                 status_obj = competition.get("status", {})
+                season_obj = event.get("season", {})
                 
                 # Basic Info
                 game_id = event.get("id")
                 date = event.get("date")
                 name = event.get("name")
                 short_name = event.get("shortName")
+                
+                # Season Info
+                season_year = season_obj.get("year")
+                season_type = season_obj.get("type")
+                season_slug = season_obj.get("slug")
                 
                 # Status (e.g., "Scheduled", "Final", "3rd Quarter")
                 status = status_obj.get("type", {}).get("description")
@@ -450,6 +460,9 @@ class ESPNClient:
                     "date": date,
                     "name": name,
                     "shortName": short_name,
+                    "seasonYear": season_year,
+                    "seasonType": season_type,
+                    "seasonSlug": season_slug,
                     "status": status,
                     "clock": clock,
                     "period": period,
