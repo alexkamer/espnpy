@@ -13,13 +13,50 @@ print(teams[0]["displayName"]) # "Atlanta Falcons"
 ```
 
 ## 2. Get the Current Roster for a Team
-Pass the ESPN Team ID. This exclusively returns the **current** active roster.
+Pass the ESPN Team ID. This exclusively returns the **current** active roster for that specific team. The output is a standardized list of dictionaries containing every player's detailed biographical information.
 
 ```python
-# '1' is the Atlanta Hawks in the NBA
-roster = await espnpy.nba.roster("1")
-for player in roster:
-    print(f"{player['fullName']} - #{player['jersey']} {player['positionAbbreviation']}")
+import espnpy
+import asyncio
+
+async def test_roster():
+    # '1' is the Atlanta Hawks in the NBA
+    roster = await espnpy.nba.roster("1")
+    
+    print(f"Total Players on Roster: {len(roster)}")
+    for player in roster[:3]:
+        print(f"{player['fullName']} - #{player['jersey']} {player['positionAbbreviation']}")
+
+asyncio.run(test_roster())
+```
+
+### Expected Output Structure (Per Player):
+*(Note: This uses the exact same standardized dictionary schema as `athlete` and `athletes`!)*
+```json
+[
+  {
+    "id": "4278039",
+    "teamId": "1",
+    "slug": "nickeil-alexander-walker",
+    "firstName": "Nickeil",
+    "lastName": "Alexander-Walker",
+    "fullName": "Nickeil Alexander-Walker",
+    "displayName": "Nickeil Alexander-Walker",
+    "shortName": "N. Alexander-Walker",
+    "weight": 205.0,
+    "displayWeight": "205 lbs",
+    "height": 77.0,
+    "displayHeight": "6' 5\"",
+    "age": 27,
+    "dateOfBirth": "1998-09-02T07:00Z",
+    "jersey": "7",
+    "position": "Guard",
+    "positionAbbreviation": "G",
+    "active": true,
+    "headshot": "https://a.espncdn.com/i/headshots/nba/players/full/4278039.png"
+  },
+  ...
+]
 ```
 
 ## 3. Get All Athletes in a League
