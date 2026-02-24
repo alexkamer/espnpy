@@ -1,6 +1,6 @@
 from .client import ESPNClient, LeagueProxy
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 # Create a global default client for convenience (espnpy.nfl.teams())
 _default_client = ESPNClient()
