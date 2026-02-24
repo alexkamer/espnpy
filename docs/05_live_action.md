@@ -104,9 +104,15 @@ for player in summary['boxscore']['players'][:2]:
     ],
     "players": [
        {
+         "gameId": "401547403",
          "id": "4685720",
          "teamId": "29",
          "name": "Bryce Young",
+         "shortName": null,
+         "starter": false,
+         "jersey": "9",
+         "position": null,
+         "headshot": "https://a.espncdn.com/...",
          "stats": {
             "passing": {
                "YDS": "146",
