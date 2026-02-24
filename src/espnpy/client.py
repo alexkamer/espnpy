@@ -509,6 +509,8 @@ class ESPNClient:
                     "homeRecord": stats_dict.get("Home", "-"),
                     "awayRecord": stats_dict.get("Road", "-"),
                     "divisionRecord": stats_dict.get("vs. Div.", "-"),
+                    "conferenceRecord": stats_dict.get("vs. Conf.", "-"),
+                    "lastTenRecord": stats_dict.get("Last Ten Games", "-"),
                     "playoffSeed": stats_dict.get("playoffSeed", "-")
                 })
                 
