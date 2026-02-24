@@ -7,11 +7,12 @@
 
 Built on `httpx` with `HTTP/2` and `asyncio.Semaphore` connection pooling, `espnpy` effortlessly handles fetching thousands of URLs concurrently without triggering timeouts or aggressive rate-limits.
 
-## Features (v1.0.0)
+## Features (v2.0.0)
 - **Massive League Support:** Auto-discovers and supports 384+ leagues (NFL, NBA, MLB, NHL, College Sports, Soccer, and obscure international leagues).
-- **Dot-Notation Proxies:** Query leagues intuitively (e.g. `client.nba.teams()`).
+- **Perfect IDE Autocomplete:** 384 explicit properties for instant querying (e.g. `espnpy.nba.teams()`).
 - **Entity Resolution:** Fetches Lists of Sports, Leagues, Teams, and Athletes.
 - **Rosters:** Fetches the current active roster for a specific team.
+- **Advanced Stats:** Fetch full league `standings` or a specific player's `athlete_stats` (Home vs Away, Wins vs Losses).
 - **Live Action:** Fetch daily `scoreboards` (schedules, live scores, and TV networks).
 - **Game Summaries:** Fetch detailed `game_summary` including Boxscores, Play-by-Play logs, and Betting Odds.
 - **News:** Fetch the latest headlines and articles for a league or filtered to a specific team.
@@ -64,34 +65,32 @@ if __name__ == "__main__":
 ## The `LeagueProxy` Magic
 You don't need to know whether the NBA belongs to the "basketball" sport category on ESPN's backend. `espnpy` handles the translation automatically.
 
-We provide explicit properties for IDE Autocomplete:
-- `client.nfl`
-- `client.nba`
-- `client.mlb`
-- `client.nhl`
-- `client.wnba`
-- `client.college_football`
-- `client.mens_college_basketball`
+**Perfect IDE Autocomplete:**
+Every single one of the 384+ leagues is explicitly exposed in the root package module. This means you don't need to read documentation or memorize ESPN IDs to find the league you want.
 
-**For all other 375+ leagues**, simply use the league abbreviation and convert hyphens/dots to underscores:
+When using VSCode, PyCharm, or any modern IDE, simply type `espnpy.` and a dropdown menu will instantly appear with every supported league.
+
 ```python
 # ESPN League: 'eng.1' (English Premier League)
-client.eng_1.teams()
+# The dot in the ESPN ID is automatically converted to an underscore.
+espnpy.eng_1.teams()
 
 # ESPN League: 'college-softball'
-client.college_softball.news()
+# The hyphen in the ESPN ID is automatically converted to an underscore.
+espnpy.college_softball.news()
 ```
 
-## Available Proxy Methods
-Once you have accessed a league via the proxy (e.g. `league = client.nba`), you have access to the following standardized methods:
+## Available Methods
+Once you have accessed a league via the proxy (e.g. `espnpy.nba`), you have access to the following standardized methods:
 
-- `await league.info()`: General information about the league.
-- `await league.teams()`: All teams in the league.
-- `await league.roster(team_id)`: The active roster for a specific team.
-- `await league.athletes(active=True)`: All athletes in the league.
-- `await league.athlete(athlete_id)`: A specific athlete's details.
-- `await league.scoreboard(date="YYYYMMDD")`: The schedule/scores for a day (or current week if omitted).
-- `await league.game_summary(event_id)`: Boxscore, play-by-play, and betting odds for a specific game.
-- `await league.news(team_id=None, limit=50)`: The latest news headlines.
+- `await espnpy.nba.teams()`: All teams in the league.
+- `await espnpy.nba.roster(team_id)`: The active roster for a specific team.
+- `await espnpy.nba.athletes(active=True)`: All athletes in the league.
+- `await espnpy.nba.athlete(athlete_id)`: A specific athlete's details.
+- `await espnpy.nba.athlete_stats(athlete_id)`: Advanced statistical splits (e.g., Home vs Away records).
+- `await espnpy.nba.standings()`: The full league standings, ordered by win percentage.
+- `await espnpy.nba.scoreboard(date="YYYYMMDD")`: The schedule/scores for a day (or current week if omitted).
+- `await espnpy.nba.game_summary(event_id)`: Boxscore, play-by-play, and betting odds for a specific game.
+- `await espnpy.nba.news(team_id=None, limit=50)`: The latest news headlines.
 
 *(If you require the raw, unparsed JSON from ESPN for advanced data extraction, you can pass `raw=True` to methods like `scoreboard()`.)*
