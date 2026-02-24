@@ -46,6 +46,7 @@ asyncio.run(test_scoreboard())
     "id": "401547403",
     "date": "2023-09-10T17:00Z",
     "name": "Carolina Panthers at Atlanta Falcons",
+    "tournamentName": "NFL Regular Season",
     "shortName": "CAR @ ATL",
     "seasonYear": 2023,
     "seasonType": 2,
@@ -62,7 +63,8 @@ asyncio.run(test_scoreboard())
     "awayTeam": "Carolina Panthers",
     "awayTeamId": "29",
     "awayScore": "10",
-    "awayLogo": "https://a.espncdn.com/..."
+    "awayLogo": "https://a.espncdn.com/...",
+    "setScores": "" 
   }
 ]
 ```

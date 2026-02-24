@@ -42,3 +42,17 @@ async def main():
 
 asyncio.run(main())
 ```
+
+---
+
+## Documentation Guide
+Check out the rest of the documentation folder to learn how to master the library!
+
+1.  [`01_getting_started.md`](./01_getting_started.md)
+2.  [`02_league_proxies.md`](./02_league_proxies.md) - Learn how `espnpy` magically maps 384+ leagues for perfect IDE autocomplete.
+3.  [`03_entities.md`](./03_entities.md) - Fetching Teams, Athletes, and Rosters.
+4.  [`04_data_and_stats.md`](./04_data_and_stats.md) - Fetching Advanced Splits and Standings.
+5.  [`05_live_action.md`](./05_live_action.md) - Fetching Scoreboards, Boxscores, and Live Odds.
+6.  [`06_news.md`](./06_news.md) - Fetching the latest headlines.
+7.  [`07_popular_leagues.md`](./07_popular_leagues.md) - A cheat sheet of the most commonly requested `espnpy` league properties.
+8.  [`08_individual_sports.md`](./08_individual_sports.md) - Learn how `espnpy` automatically adapts to handle Tennis Rankings and F1 Grids.

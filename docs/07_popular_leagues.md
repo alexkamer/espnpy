@@ -20,7 +20,7 @@ If you don't want to scroll through the autocomplete menu, here is a quick refer
 | **Men's College (NCAA)** | `espnpy.mens_college_basketball` |
 | **Women's College (NCAA)** | `espnpy.womens_college_basketball` |
 | **FIBA** | `espnpy.fiba` |
-| **NBA G-League** | `espnpy.nba_g_league` |
+| **NBA G-League** | `espnpy.nba_development` |
 
 ## ⚾️ Baseball & Softball
 | League | Python Property |
@@ -46,8 +46,8 @@ If you don't want to scroll through the autocomplete menu, here is a quick refer
 | **Bundesliga (Germany)** | `espnpy.ger_1` |
 | **Serie A (Italy)** | `espnpy.ita_1` |
 | **Ligue 1 (France)** | `espnpy.fra_1` |
-| **Major League Soccer (US)**| `espnpy.mls` |
-| **NWSL (Women's US)** | `espnpy.nwsl` |
+| **Major League Soccer (US)**| `espnpy.usa_1` |
+| **NWSL (Women's US)** | `espnpy.usa_nwsl` |
 | **UEFA Champions League** | `espnpy.uefa_champions` |
 | **UEFA Europa League** | `espnpy.uefa_europa` |
 | **FIFA World Cup** | `espnpy.fifa_world` |
@@ -56,8 +56,8 @@ If you don't want to scroll through the autocomplete menu, here is a quick refer
 | League | Python Property |
 | :--- | :--- |
 | **Formula 1** | `espnpy.f1` |
-| **NASCAR** | `espnpy.nascar` |
-| **IndyCar** | `espnpy.indycar` |
+| **NASCAR** | `espnpy.nascar_premier` |
+| **IndyCar** | `espnpy.irl` |
 
 ## ⛳️ Golf
 | League | Python Property |

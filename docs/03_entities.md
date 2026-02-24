@@ -19,6 +19,10 @@ async def test_discovery():
     baseball_leagues = await espnpy._default_client.get_leagues("baseball")
     for league in baseball_leagues[:2]:
         print(f"{league['name']} (ID: {league['id']}, Slug: {league['slug']})")
+        
+    # 3. Fetch general information for a specific league directly from the proxy
+    nfl_info = await espnpy.nfl.info()
+    print(f"NFL Season: {nfl_info.get('season', {}).get('year')}")
 
 asyncio.run(test_discovery())
 ```

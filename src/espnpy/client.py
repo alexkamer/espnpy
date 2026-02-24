@@ -409,74 +409,112 @@ class ESPNClient:
         games = []
         for event in raw_data.get("events", []):
             try:
-                competition = event.get("competitions", [])[0]
-                status_obj = competition.get("status", {})
-                season_obj = event.get("season", {})
-                
-                # Basic Info
-                game_id = event.get("id")
-                date = event.get("date")
-                name = event.get("name")
-                short_name = event.get("shortName")
-                
-                # Season Info
-                season_year = season_obj.get("year")
-                season_type = season_obj.get("type")
-                season_slug = season_obj.get("slug")
-                
-                # Status (e.g., "Scheduled", "Final", "3rd Quarter")
-                status = status_obj.get("type", {}).get("description")
-                clock = status_obj.get("displayClock")
-                period = status_obj.get("period")
-                
-                # Venue and TV Networks
-                venue = competition.get("venue", {}).get("fullName")
-                broadcasts = [b.get("names", [])[0] for b in competition.get("broadcasts", []) if b.get("names")]
-                
-                # Teams and Scores
-                home_team, home_team_id, home_score, home_logo = None, None, None, None
-                away_team, away_team_id, away_score, away_logo = None, None, None, None
-                
-                for comp in competition.get("competitors", []):
-                    team_info = comp.get("team", {})
-                    t_name = team_info.get("displayName")
-                    t_id = team_info.get("id")
-                    t_logo = team_info.get("logo")
-                    
-                    # Score can sometimes be a string on scoreboard, but a dict on team_schedule
-                    score_raw = comp.get("score")
-                    if isinstance(score_raw, dict):
-                        score = score_raw.get("displayValue")
-                    else:
-                        score = score_raw
-                    
-                    if comp.get("homeAway") == "home":
-                        home_team, home_team_id, home_score, home_logo = t_name, t_id, score, t_logo
-                    else:
-                        away_team, away_team_id, away_score, away_logo = t_name, t_id, score, t_logo
+                # Team sports and Racing use "competitions" directly on the event
+                if "competitions" in event:
+                    competitions = event.get("competitions", [])
+                # Tennis uses "groupings" which contain the "competitions" (matches)
+                elif "groupings" in event:
+                    competitions = []
+                    for grouping in event.get("groupings", []):
+                        competitions.extend(grouping.get("competitions", []))
+                else:
+                    competitions = []
 
-                games.append({
-                    "id": game_id,
-                    "date": date,
-                    "name": name,
-                    "shortName": short_name,
-                    "seasonYear": season_year,
-                    "seasonType": season_type,
-                    "seasonSlug": season_slug,
-                    "status": status,
-                    "clock": clock,
-                    "period": period,
-                    "venue": venue,
-                    "broadcasts": broadcasts,
-                    "homeTeam": home_team,
-                    "homeTeamId": home_team_id,
-                    "homeScore": home_score,
-                    "homeLogo": home_logo,
-                    "awayTeam": away_team,
-                    "awayTeamId": away_team_id,
-                    "awayScore": away_score,
-                    "awayLogo": away_logo,
-                })
+                for competition in competitions:
+                    status_obj = competition.get("status", {})
+                    season_obj = event.get("season", {})
+                    
+                    # Basic Info. Fallback to event name if competition doesn't have one (Tennis)
+                    game_id = competition.get("id") or event.get("id")
+                    date = competition.get("date") or event.get("date")
+                    name = competition.get("name") or event.get("name")
+                    tournament_name = event.get("name") # Usually the overall event/tournament
+                    short_name = competition.get("shortName") or event.get("shortName")
+                    
+                    # Season Info
+                    season_year = season_obj.get("year")
+                    season_type = season_obj.get("type")
+                    season_slug = season_obj.get("slug")
+                    
+                    # Status (e.g., "Scheduled", "Final", "3rd Quarter")
+                    status = status_obj.get("type", {}).get("description")
+                    clock = status_obj.get("displayClock")
+                    period = status_obj.get("period")
+                    
+                    # Venue and TV Networks
+                    venue = competition.get("venue", {}).get("fullName")
+                    broadcasts = [b.get("names", [])[0] for b in competition.get("broadcasts", []) if b.get("names")]
+                    
+                    # Teams and Scores
+                    home_team, home_team_id, home_score, home_logo = None, None, None, None
+                    away_team, away_team_id, away_score, away_logo = None, None, None, None
+                    home_linescores, away_linescores = [], []
+                    
+                    for idx, comp in enumerate(competition.get("competitors", [])):
+                        # Competitor can be a team or an athlete
+                        team_info = comp.get("team") or comp.get("athlete") or {}
+                        t_name = team_info.get("displayName")
+                        t_id = team_info.get("id")
+                        t_logo = team_info.get("logo") or team_info.get("headshot", {}).get("href") if isinstance(team_info.get("headshot"), dict) else team_info.get("flag", {}).get("href")
+                        
+                        # Set Scores / Linescores (e.g., [6.0, 6.0])
+                        linescores = comp.get("linescores", [])
+                        ls_values = [str(int(ls.get("value", 0))) for ls in linescores] if linescores else []
+                        
+                        # Main Score (Overall wins or sets won)
+                        # In Tennis, comp.get("score") is usually null, so we sum the 'winner: true' linescores
+                        score_raw = comp.get("score")
+                        if score_raw is None and linescores:
+                            score_raw = sum(1 for ls in linescores if ls.get("winner"))
+                            if not score_raw and status == "Final": # fallback if winner boolean isn't set perfectly
+                                score_raw = ls_values[-1] if ls_values else "0"
+                        
+                        if isinstance(score_raw, dict):
+                            score = score_raw.get("displayValue")
+                        else:
+                            score = str(score_raw) if score_raw is not None else None
+                        
+                        # For Team sports
+                        if comp.get("homeAway") == "home":
+                            home_team, home_team_id, home_score, home_logo, home_linescores = t_name, t_id, score, t_logo, ls_values
+                        elif comp.get("homeAway") == "away":
+                            away_team, away_team_id, away_score, away_logo, away_linescores = t_name, t_id, score, t_logo, ls_values
+                        # For Individual sports (Tennis/Racing) where home/away is null
+                        else:
+                            if idx == 0:
+                                home_team, home_team_id, home_score, home_logo, home_linescores = t_name, t_id, score, t_logo, ls_values
+                            elif idx == 1:
+                                away_team, away_team_id, away_score, away_logo, away_linescores = t_name, t_id, score, t_logo, ls_values
+
+                    # Format linescores into a readable string (e.g., "6-3, 6-4")
+                    set_scores = ""
+                    if home_linescores and away_linescores and len(home_linescores) == len(away_linescores):
+                        set_scores = ", ".join([f"{h}-{a}" for h, a in zip(home_linescores, away_linescores)])
+
+                    games.append({
+                        "id": game_id,
+                        "date": date,
+                        "name": name,
+                        "tournamentName": tournament_name, # Specifically added for Tennis/Golf
+                        "shortName": short_name,
+                        "seasonYear": season_year,
+                        "seasonType": season_type,
+                        "seasonSlug": season_slug,
+                        "status": status,
+                        "clock": clock,
+                        "period": period,
+                        "venue": venue,
+                        "broadcasts": broadcasts,
+                        "homeTeam": home_team,
+                        "homeTeamId": home_team_id,
+                        "homeScore": home_score,
+                        "homeLogo": home_logo,
+                        "awayTeam": away_team,
+                        "awayTeamId": away_team_id,
+                        "awayScore": away_score,
+                        "awayLogo": away_logo,
+                        "setScores": set_scores # Specificially added for Tennis/Volleyball
+                    })
             except Exception:
                 # If a game's JSON is malformed, skip it rather than crashing the whole scoreboard
                 pass
@@ -597,60 +635,107 @@ class ESPNClient:
         """
         resolved_sport = self._resolve_sport(league, sport)
         
-        # Standings live on the v2 SITE API
-        # Example: https://site.api.espn.com/apis/v2/sports/football/nfl/standings
-        # We manually build this URL because the structure is slightly different than /apis/site/v2
-        url = f"https://site.api.espn.com/apis/v2/sports/{resolved_sport}/{league}/standings"
-        raw_data = await self.get_url(url)
+        # Tennis, Golf, and MMA use rankings instead of standings
+        if resolved_sport in ["tennis", "golf", "mma"]:
+            url = f"https://site.api.espn.com/apis/site/v2/sports/{resolved_sport}/{league}/rankings"
+            try:
+                raw_data = await self.get_url(url)
+            except httpx.HTTPStatusError:
+                return []
+        else:
+            url = f"https://site.api.espn.com/apis/v2/sports/{resolved_sport}/{league}/standings"
+            try:
+                raw_data = await self.get_url(url)
+            except httpx.HTTPStatusError:
+                return []
         
         organized_standings = []
         
-        # Standings are usually grouped by conference/league (e.g., AFC, NFC or Eastern, Western)
-        for group in raw_data.get("children", []):
-            group_name = group.get("name", "Overall")
-            entries = group.get("standings", {}).get("entries", [])
-            
-            for entry in entries:
-                team_info = entry.get("team", {})
+        # If we pulled Rankings (Tennis/Golf/MMA)
+        if "rankings" in raw_data:
+            for group in raw_data.get("rankings", []):
+                group_name = group.get("name", "Overall")
+                for rank_entry in group.get("ranks", []):
+                    athlete_info = rank_entry.get("athlete", {})
+                    
+                    organized_standings.append({
+                        "id": athlete_info.get("id", ""),
+                        "name": athlete_info.get("displayName", ""),
+                        "abbreviation": athlete_info.get("shortname", ""),
+                        "logo": athlete_info.get("headshot", "") or athlete_info.get("flag", ""),
+                        "group": group_name,
+                        "wins": "0", "losses": "0", "ties": "0", "winPercent": "0",
+                        "gamesBehind": "-",
+                        "points": str(rank_entry.get("points", 0)),
+                        "rank": str(rank_entry.get("current", 0)),
+                        "streak": rank_entry.get("trend", "-"),
+                        "pointsFor": "0", "pointsAgainst": "0", "differential": "0",
+                        "homeRecord": "-", "awayRecord": "-", "divisionRecord": "-",
+                        "conferenceRecord": "-", "lastTenRecord": "-", "playoffSeed": "-"
+                    })
+        else:
+            # Standings are usually grouped by conference/league (e.g., AFC, NFC or Eastern, Western)
+            for group in raw_data.get("children", []):
+                group_name = group.get("name", "Overall")
+                entries = group.get("standings", {}).get("entries", [])
                 
-                # ESPN provides a list of stats (wins, losses, ties, pct). We flatten this into a dict.
-                raw_stats = entry.get("stats", [])
-                stats_dict = {s.get("name"): s.get("displayValue") for s in raw_stats if "name" in s and "displayValue" in s}
-                
-                organized_standings.append({
-                    "teamId": team_info.get("id", ""),
-                    "team": team_info.get("displayName", ""),
-                    "teamAbbreviation": team_info.get("abbreviation", ""),
-                    "logo": team_info.get("logos", [{}])[0].get("href") if team_info.get("logos") else None,
-                    "group": group_name,
-                    "wins": stats_dict.get("wins", "0"),
-                    "losses": stats_dict.get("losses", "0"),
-                    "ties": stats_dict.get("ties", "0"),
-                    "winPercent": stats_dict.get("winPercent", "0"),
-                    "gamesBehind": stats_dict.get("gamesBehind", "-"),
-                    "streak": stats_dict.get("streak", "-"),
-                    "pointsFor": stats_dict.get("pointsFor", "0"),
-                    "pointsAgainst": stats_dict.get("pointsAgainst", "0"),
-                    "differential": stats_dict.get("differential", "0"),
-                    "homeRecord": stats_dict.get("Home", "-"),
-                    "awayRecord": stats_dict.get("Road", "-"),
-                    "divisionRecord": stats_dict.get("vs. Div.", "-"),
-                    "conferenceRecord": stats_dict.get("vs. Conf.", "-"),
-                    "lastTenRecord": stats_dict.get("Last Ten Games", "-"),
-                    "playoffSeed": stats_dict.get("playoffSeed", "-")
-                })
-                
-        # Sort standings descending by win percentage (so index 0 is always the actual leader)
-        def parse_win_percent(pct_str: str) -> float:
+                for entry in entries:
+                    # Team sports use "team", Racing/Tennis use "athlete" or "constructor"
+                    entity_info = entry.get("team") or entry.get("athlete") or entry.get("constructor") or {}
+                    
+                    # ESPN provides a list of stats (wins, losses, ties, pct). We flatten this into a dict.
+                    raw_stats = entry.get("stats", [])
+                    stats_dict = {s.get("name"): s.get("displayValue") for s in raw_stats if "name" in s and "displayValue" in s}
+                    
+                    organized_standings.append({
+                        "id": entity_info.get("id", ""),
+                        "name": entity_info.get("displayName", ""),
+                        "abbreviation": entity_info.get("abbreviation", ""),
+                        "logo": entity_info.get("logos", [{}])[0].get("href") if entity_info.get("logos") else (entity_info.get("flag", {}).get("href")),
+                        "group": group_name,
+                        "wins": stats_dict.get("wins", "0"),
+                        "losses": stats_dict.get("losses", "0"),
+                        "ties": stats_dict.get("ties", "0"),
+                        "winPercent": stats_dict.get("winPercent", "0"),
+                        "gamesBehind": stats_dict.get("gamesBehind", "-"),
+                        "points": stats_dict.get("championshipPts") or stats_dict.get("points") or "0", # For Racing/Tennis
+                        "rank": stats_dict.get("rank") or "-", # For Racing/Tennis
+                        "streak": stats_dict.get("streak", "-"),
+                        "pointsFor": stats_dict.get("pointsFor", "0"),
+                        "pointsAgainst": stats_dict.get("pointsAgainst", "0"),
+                        "differential": stats_dict.get("differential", "0"),
+                        "homeRecord": stats_dict.get("Home", "-"),
+                        "awayRecord": stats_dict.get("Road", "-"),
+                        "divisionRecord": stats_dict.get("vs. Div.", "-"),
+                        "conferenceRecord": stats_dict.get("vs. Conf.", "-"),
+                        "lastTenRecord": stats_dict.get("Last Ten Games", "-"),
+                        "playoffSeed": stats_dict.get("playoffSeed", "-")
+                    })
+                    
+        # Sort standings: If win percentage is valid, sort by it. Otherwise, try to sort by rank or points (Racing/Tennis).
+        def parse_sort_val(entry: dict) -> float:
             try:
-                # Handle standard "0.500" or ".500" strings. If missing, return 0.
+                # If there is a rank, we want the lowest rank (so we return a negative number to sort descending, or reverse the logic)
+                # But since we use reverse=True below, we need the "best" team to have the highest number.
+                # So Rank 1 = 1000, Rank 2 = 999.
+                rank = entry.get("rank")
+                if rank and rank != "-":
+                    return 10000 - float(rank)
+                    
+                # If there are points (like F1), sort by points
+                points = entry.get("points")
+                if points and points != "0" and points != "-":
+                    return float(points)
+
+                # Fallback to standard win percentage
+                pct_str = entry.get("winPercent")
                 if not pct_str or pct_str == "-":
                     return 0.0
                 return float(pct_str)
             except ValueError:
                 return 0.0
 
-        organized_standings.sort(key=lambda x: parse_win_percent(x["winPercent"]), reverse=True)
+        organized_standings.sort(key=lambda x: parse_sort_val(x), reverse=True)
                 
         return organized_standings
 
