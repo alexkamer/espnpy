@@ -270,7 +270,7 @@ class ESPNClient:
             
         return organized_teams
 
-    def _standardize_boxscore(self, box_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _standardize_boxscore(self, box_data: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         """Flatten the nested ESPN boxscore JSON into cleanly organized team and player dictionaries."""
         if not box_data:
             return {}
@@ -287,9 +287,11 @@ class ESPNClient:
                     stats_dict[label] = val
                     
             teams_list.append({
+                "gameId": game_id,
                 "id": t_info.get("id"),
                 "name": t_info.get("displayName"),
                 "abbreviation": t_info.get("abbreviation"),
+                "logo": t_info.get("logo"),
                 "stats": stats_dict
             })
             
@@ -312,10 +314,15 @@ class ESPNClient:
                         
                     if a_id not in players_dict:
                         players_dict[a_id] = {
+                            "gameId": game_id,
                             "id": a_id,
                             "teamId": team_id,
                             "name": a_info.get("displayName"),
                             "shortName": a_info.get("shortName"),
+                            "starter": ath.get("starter", False),
+                            "jersey": a_info.get("jersey"),
+                            "position": a_info.get("position", {}).get("abbreviation") or a_info.get("position", {}).get("name"),
+                            "headshot": a_info.get("headshot", {}).get("href"),
                             "stats": {}
                         }
                     
@@ -443,7 +450,7 @@ class ESPNClient:
         raw_data = await self._get(f"sports/{resolved_sport}/{league}/summary", params=params, base_url=self.SITE_BASE_URL)
         
         # Standardize the output
-        boxscore = self._standardize_boxscore(raw_data.get("boxscore", {}))
+        boxscore = self._standardize_boxscore(raw_data.get("boxscore", {}), event_id)
         
         # Extract betting odds safely
         pickcenter = raw_data.get("pickcenter", [])
