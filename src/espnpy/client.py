@@ -13,9 +13,13 @@ class LeagueProxy:
         """Fetch general information for this league."""
         return await self._client.get_league(self.league)
 
-    async def teams(self) -> List[Dict[str, Any]]:
-        """Fetch all teams for this league."""
-        return await self._client.get_teams(self.league)
+    async def teams(self, season: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch all teams for this league.
+        
+        Args:
+            season: Optional historical season string (e.g. '2016').
+        """
+        return await self._client.get_teams(self.league, season=season)
 
     async def team(self, team_id: str) -> Dict[str, Any]:
         """Fetch general information for a specific team in this league by their ID.
@@ -34,15 +38,16 @@ class LeagueProxy:
         """
         return await self._client.get_team_schedule(self.league, team_id, season=season)
 
-    async def athletes(self, active: Optional[bool] = None) -> List[Dict[str, Any]]:
+    async def athletes(self, active: Optional[bool] = None, season: Optional[str] = None) -> List[Dict[str, Any]]:
         """Fetch all athletes/players for this league.
         
         Args:
             active: If True, explicitly requests only active athletes. 
                     If False, explicitly requests all historical athletes.
                     If None (default), returns whatever the API provides natively.
+            season: Optional historical season string (e.g. '2016').
         """
-        return await self._client.get_athletes(self.league, active=active)
+        return await self._client.get_athletes(self.league, active=active, season=season)
 
     async def athlete(self, athlete_id: str) -> Dict[str, Any]:
         """Fetch details for a specific athlete in this league by their ID.
@@ -55,6 +60,14 @@ class LeagueProxy:
     async def athlete_stats(self, athlete_id: str) -> Dict[str, Any]:
         """Fetch advanced statistical splits (Home vs Away, Season Totals) for a specific athlete."""
         return await self._client.get_athlete_stats(self.league, athlete_id)
+
+    async def find_athlete(self, name: str) -> Optional[Dict[str, Any]]:
+        """Fuzzy search for an athlete by name (e.g., 'Stephen Curry'). Returns their full profile."""
+        return await self._client.find_athlete(self.league, name)
+
+    async def find_team(self, name: str) -> Optional[Dict[str, Any]]:
+        """Fuzzy search for a team by name (e.g., 'Falcons'). Returns their full profile."""
+        return await self._client.find_team(self.league, name)
 
     async def scoreboard(self, date: Optional[str] = None, group: Optional[str] = None, season_type: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
@@ -94,9 +107,13 @@ class LeagueProxy:
         """
         return await self._client.get_news(self.league, team_id=team_id, limit=limit)
 
-    async def standings(self) -> List[Dict[str, Any]]:
-        """Fetch the current standings (wins, losses, win percentage) for the league."""
-        return await self._client.get_standings(self.league)
+    async def standings(self, season: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch the current standings (wins, losses, win percentage) for the league.
+        
+        Args:
+            season: Optional historical season string (e.g. '2016').
+        """
+        return await self._client.get_standings(self.league, season=season)
 
     async def roster(self, team_id: str) -> List[Dict[str, Any]]:
         """Fetch the current roster for a specific team in this league.
@@ -141,6 +158,67 @@ class ESPNClient:
     # ---------------------------------------------------------
     # Core API Methods
     # ---------------------------------------------------------
+
+    async def _search_espn(self, query: str, search_type: str, league: str) -> Optional[str]:
+        """A helper method to use ESPN's global search engine to fuzzy find an ID.
+        
+        Args:
+            query: The search string (e.g. 'Patrick Mahomes').
+            search_type: 'player' or 'team'.
+            league: The league acronym to filter by (e.g., 'NFL').
+            
+        Returns:
+            The extracted ESPN ID string, or None if not found.
+        """
+        url = "https://site.api.espn.com/apis/search/v2"
+        params = {"query": query, "limit": 15, "type": search_type}
+        
+        try:
+            response = await self._session.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            
+            # The structure returns an array of "type" blocks (like "player", "team")
+            for result_block in data.get("results", []):
+                for item in result_block.get("contents", []):
+                    # Soft filter: ensure the league abbreviation is somewhere in the description or subtitle
+                    # (e.g. "NFL" or "NBA") so we don't accidentally grab a CFL player.
+                    desc = item.get("description", "").upper()
+                    sub = item.get("subtitle", "").upper()
+                    
+                    if league.upper() in desc or league.upper() in sub:
+                        # Extract the ID from the end of the uid: 's:20~l:28~a:3139477' or '...~t:12'
+                        uid = item.get("uid", "")
+                        parts = uid.split(":")
+                        if parts:
+                            return parts[-1]
+            return None
+        except httpx.HTTPError:
+            return None
+
+    async def find_athlete(self, league: str, query: str, sport: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Fuzzy search for an athlete by name (e.g., 'Stephen Curry').
+        Returns their full standardized profile dictionary, or None if not found.
+        """
+        athlete_id = await self._search_espn(query, search_type="player", league=league)
+        if athlete_id:
+            try:
+                return await self.get_athlete(league, athlete_id, sport=sport)
+            except httpx.HTTPError:
+                pass
+        return None
+
+    async def find_team(self, league: str, query: str, sport: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Fuzzy search for a team by name (e.g., 'Falcons').
+        Returns their full standardized profile dictionary, or None if not found.
+        """
+        team_id = await self._search_espn(query, search_type="team", league=league)
+        if team_id:
+            try:
+                return await self.get_team(league, team_id, sport=sport)
+            except httpx.HTTPError:
+                pass
+        return None
 
     def _resolve_sport(self, league: str, sport: Optional[str] = None) -> str:
         """A helper to infer the sport if the user only passed the league name."""
@@ -235,10 +313,13 @@ class ESPNClient:
         resolved_sport = self._resolve_sport(league, sport)
         return await self._get(f"/sports/{resolved_sport}/leagues/{league}")
 
-    async def get_teams(self, league: str, sport: Optional[str] = None) -> List[Dict[str, Any]]:
+    async def get_teams(self, league: str, sport: Optional[str] = None, season: Optional[str] = None) -> List[Dict[str, Any]]:
         """Get all teams for a specific league, handling pagination automatically.
         The sport is automatically inferred for common leagues.
         
+        Args:
+            season: Optional year string (e.g. '2016') to fetch historical teams.
+            
         Returns:
             A standardized list of dictionaries containing team details.
         """
@@ -246,6 +327,8 @@ class ESPNClient:
         
         # 1. Fetch the first page of references with max limit
         params = {"limit": 1000, "page": 1}
+        if season: params["season"] = season
+        
         first_page = await self._get(f"/sports/{resolved_sport}/leagues/{league}/teams", params=params)
         
         items = first_page.get("items", [])
@@ -253,10 +336,12 @@ class ESPNClient:
         
         # 2. If there are multiple pages (e.g., > 1000 teams), fetch the remaining pages of URLs
         if page_count > 1:
-            page_tasks = [
-                self._get(f"/sports/{resolved_sport}/leagues/{league}/teams", params={"limit": 1000, "page": page_idx})
-                for page_idx in range(2, page_count + 1)
-            ]
+            page_tasks = []
+            for page_idx in range(2, page_count + 1):
+                page_params = {"limit": 1000, "page": page_idx}
+                if season: page_params["season"] = season
+                page_tasks.append(self._get(f"/sports/{resolved_sport}/leagues/{league}/teams", params=page_params))
+                
             additional_pages = await asyncio.gather(*page_tasks)
             for page in additional_pages:
                 items.extend(page.get("items", []))
@@ -623,29 +708,37 @@ class ESPNClient:
             
         return organized_news
 
-    async def get_standings(self, league: str, sport: Optional[str] = None) -> List[Dict[str, Any]]:
+    async def get_standings(self, league: str, sport: Optional[str] = None, season: Optional[str] = None) -> List[Dict[str, Any]]:
         """Fetch the current standings (wins, losses, win percentage) for the league.
         
         Args:
             league: The league (e.g., 'nfl').
             sport: Automatically inferred if not provided.
+            season: Optional historical season string (e.g. '2016').
             
         Returns:
             A standardized list of dictionaries containing team standings, ordered by rank.
         """
         resolved_sport = self._resolve_sport(league, sport)
+        params = {}
+        if season:
+            params["season"] = season
         
         # Tennis, Golf, and MMA use rankings instead of standings
         if resolved_sport in ["tennis", "golf", "mma"]:
             url = f"https://site.api.espn.com/apis/site/v2/sports/{resolved_sport}/{league}/rankings"
             try:
-                raw_data = await self.get_url(url)
+                raw_data = await self._session.get(url, params=params)
+                raw_data.raise_for_status()
+                raw_data = raw_data.json()
             except httpx.HTTPStatusError:
                 return []
         else:
             url = f"https://site.api.espn.com/apis/v2/sports/{resolved_sport}/{league}/standings"
             try:
-                raw_data = await self.get_url(url)
+                raw_data = await self._session.get(url, params=params)
+                raw_data.raise_for_status()
+                raw_data = raw_data.json()
             except httpx.HTTPStatusError:
                 return []
         
@@ -2078,7 +2171,7 @@ class ESPNClient:
     # Session Management
     # ---------------------------------------------------------
 
-    async def get_athletes(self, league: str, sport: Optional[str] = None, active: Optional[bool] = None) -> List[Dict[str, Any]]:
+    async def get_athletes(self, league: str, sport: Optional[str] = None, active: Optional[bool] = None, season: Optional[str] = None) -> List[Dict[str, Any]]:
         """Get all athletes/players for a specific league, handling pagination automatically.
         The sport is automatically inferred for common leagues.
         
@@ -2088,6 +2181,7 @@ class ESPNClient:
             active: If True, explicitly requests only active athletes via the API. 
                     Warning: Some leagues (like WNBA) throw a 400 Bad Request if this flag is passed.
                     If None (default), returns whatever the API provides natively.
+            season: Optional year string (e.g. '2016') to fetch historical players.
                     
         Returns:
             A standardized list of dictionaries containing athlete details.
@@ -2098,6 +2192,8 @@ class ESPNClient:
         params = {"limit": 1000, "page": 1}
         if active is not None:
             params["active"] = "true" if active else "false"
+        if season:
+            params["season"] = season
             
         first_page = await self._get(f"/sports/{resolved_sport}/leagues/{league}/athletes", params=params)
         
@@ -2111,6 +2207,8 @@ class ESPNClient:
                 page_params = {"limit": 1000, "page": page_idx}
                 if active is not None:
                     page_params["active"] = "true" if active else "false"
+                if season:
+                    page_params["season"] = season
                 page_tasks.append(
                     self._get(f"/sports/{resolved_sport}/leagues/{league}/athletes", params=page_params)
                 )

@@ -11,6 +11,7 @@ Each file includes an **"Expected Output"** comment block at the very bottom, so
 
 ### 🏀 Basketball
 *   [**`01_nba_standings_and_splits.py`**](./basketball/01_nba_standings_and_splits.py): Learn how to fetch League Standings (point differential) and deeply nested Advanced Player Splits (Home vs Away PPG, 3PT%).
+*   [**`02_nba_time_travel.py`**](./basketball/02_nba_time_travel.py): Learn how to **Fuzzy Search** for a team without knowing their ESPN ID, and use the `season="2016"` parameter to travel back in time and pull the 73-9 Golden State Warriors standings!
 
 ### ⚽️ Soccer
 *   [**`01_epl_roster_and_news.py`**](./soccer/01_epl_roster_and_news.py): Learn how to handle ESPN's soccer dot-notation (`eng.1`), pull current team rosters, and fetch the latest breaking headlines.

@@ -67,6 +67,17 @@ Want to see exactly how to fetch EPL Rosters, F1 Drivers, or ATP Tennis Match Se
 
 Check out the [**`examples/` directory**](./examples)! It contains fully commented, copy-pasteable Python scripts categorized by sport, complete with their expected JSON outputs printed at the bottom so you can learn exactly how `espnpy` works without running a single line of code!
 
+## 🔍 Fuzzy Search (No IDs Required!)
+Don't know Stephen Curry's or the Kansas City Chiefs' internal ESPN ID? No problem! `espnpy` hooks directly into ESPN's global search engine.
+
+```python
+# Instantly returns the full athlete profile for Stephen Curry (ID: 3975)
+curry = await espnpy.nba.find_athlete("Curry")
+
+# Instantly returns the full team profile for the Chiefs (ID: 12)
+chiefs = await espnpy.nfl.find_team("Chiefs")
+```
+
 ---
 
 ## The `LeagueProxy` Magic
@@ -103,16 +114,20 @@ espnpy.college_softball.news()
 *For a comprehensive list of how to query soccer leagues (which ESPN designates with dots like `eng.1`) and other obscure leagues, check out the documentation folder! There is also a dedicated guide for how `espnpy` magically handles Individual Sports (like Tennis Rankings and F1 Grids).*
 
 ## Available Methods
-Once you have accessed a league via the proxy (e.g. `espnpy.nba`), you have access to the following standardized methods:
+Once you have accessed a league via the proxy (e.g. `espnpy.nba`), you have access to the following standardized methods.
+
+*Note: Many methods support **Time Travel** via the `season="YYYY"` parameter, allowing you to instantly pull historical data (like the 2016 NBA Standings) instead of the current active season!*
 
 - `await espnpy.nba.info()`: General information and current season details for the league.
-- `await espnpy.nba.teams()`: All teams in the league.
+- `await espnpy.nba.find_team("Warriors")`: Fuzzy search for a team without needing their ID.
+- `await espnpy.nba.find_athlete("Curry")`: Fuzzy search for an athlete without needing their ID.
+- `await espnpy.nba.teams(season="YYYY")`: All teams in the league.
 - `await espnpy.nba.team(team_id)`: A specific team's details, colors, and current standing.
 - `await espnpy.nba.roster(team_id)`: The active roster for a specific team.
-- `await espnpy.nba.athletes(active=True)`: All athletes in the league.
+- `await espnpy.nba.athletes(active=True, season="YYYY")`: All athletes in the league.
 - `await espnpy.nba.athlete(athlete_id)`: A specific athlete's details.
 - `await espnpy.nba.athlete_stats(athlete_id)`: Advanced statistical splits (e.g., Home vs Away records).
-- `await espnpy.nba.standings()`: The full league standings, ordered by win percentage.
+- `await espnpy.nba.standings(season="YYYY")`: The full league standings, ordered by win percentage.
 - `await espnpy.nba.schedule(team_id, season="YYYY")`: The full season schedule and results for a specific team.
 - `await espnpy.nba.scoreboard(date="YYYYMMDD")`: The schedule/scores for a day (or current week if omitted).
 - `await espnpy.nba.game_summary(event_id)`: Boxscore, play-by-play, and betting odds for a specific game.
