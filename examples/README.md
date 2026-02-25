@@ -8,6 +8,7 @@ Each file includes an **"Expected Output"** comment block at the very bottom, so
 
 ### 🏈 Football
 *   [**`01_nfl_scoreboard_and_boxscore.py`**](./football/01_nfl_scoreboard_and_boxscore.py): Learn how to fetch the daily scoreboard, detailed betting odds, play-by-play logs, and passing leaders.
+*   [**`02_nfl_team_schedule.py`**](./football/02_nfl_team_schedule.py): Learn how to use **Fuzzy Search** to find a team by name, and then pull their entire Historical Schedule (like the undefeated 2007 Patriots regular season).
 
 ### 🏀 Basketball
 *   [**`01_nba_standings_and_splits.py`**](./basketball/01_nba_standings_and_splits.py): Learn how to fetch League Standings (point differential) and deeply nested Advanced Player Splits (Home vs Away PPG, 3PT%).
