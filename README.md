@@ -62,6 +62,13 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+## 🚀 Runnable Examples
+Want to see exactly how to fetch EPL Rosters, F1 Drivers, or ATP Tennis Match Sets? 
+
+Check out the [**`examples/` directory**](./examples)! It contains fully commented, copy-pasteable Python scripts categorized by sport, complete with their expected JSON outputs printed at the bottom so you can learn exactly how `espnpy` works without running a single line of code!
+
+---
+
 ## The `LeagueProxy` Magic
 You don't need to know whether the NBA belongs to the "basketball" sport category on ESPN's backend. `espnpy` handles the translation automatically.
 
