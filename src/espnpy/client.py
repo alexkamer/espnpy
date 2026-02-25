@@ -82,6 +82,14 @@ class LeagueProxy:
         """
         return await self._client.get_scoreboard(self.league, date=date, group=group, season_type=season_type, limit=limit, raw=raw)
 
+    async def leaderboard(self, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch the live or final leaderboard for a massive-field event (like PGA Golf).
+        
+        Args:
+            date: Optional date string 'YYYYMMDD' to fetch a historical tournament.
+        """
+        return await self._client.get_leaderboard(self.league, date=date)
+
     async def game_summary(self, event_id: str) -> Dict[str, Any]:
         """Fetch the detailed game summary (boxscore, play-by-play, odds) for a specific event.
         
@@ -454,6 +462,54 @@ class ESPNClient:
             "players": list(players_dict.values())
         }
 
+    async def get_leaderboard(self, league: str, sport: Optional[str] = None, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Fetch the live or final leaderboard for a massive-field event (like PGA Golf).
+        
+        Args:
+            league: The league (e.g., 'pga').
+            sport: Automatically inferred if not provided.
+            date: Optional date string 'YYYYMMDD' to fetch a historical tournament's leaderboard.
+            
+        Returns:
+            A list of dictionary objects representing golfers/competitors in order of their rank.
+        """
+        resolved_sport = self._resolve_sport(league, sport)
+        params = {}
+        if date:
+            params["dates"] = date
+            
+        raw_data = await self._get(f"sports/{resolved_sport}/{league}/scoreboard", params=params, base_url=self.SITE_BASE_URL)
+        
+        leaderboard = []
+        for event in raw_data.get("events", []):
+            tournament_name = event.get("name")
+            status = event.get("status", {}).get("type", {}).get("description")
+            
+            comp = event.get("competitions", [])[0] if event.get("competitions") else {}
+            venue = comp.get("venue", {}).get("fullName")
+            
+            for idx, golfer in enumerate(comp.get("competitors", []), 1):
+                athlete = golfer.get("athlete", {})
+                
+                # Round scores
+                linescores = golfer.get("linescores", [])
+                rounds = [str(int(r.get("value"))) for r in linescores if r.get("value")]
+                
+                leaderboard.append({
+                    "tournamentName": tournament_name,
+                    "status": status,
+                    "venue": venue,
+                    "id": athlete.get("id"),
+                    "name": athlete.get("displayName"),
+                    "flag": athlete.get("flag", {}).get("href"),
+                    "rank": str(idx),
+                    "scoreToPar": golfer.get("score") or "E",
+                    "rounds": rounds,
+                    "totalStrokes": golfer.get("statistics", [{}])[0].get("displayValue") if golfer.get("statistics") else sum([int(r) for r in rounds]) if rounds else 0
+                })
+                
+        return leaderboard
+
     async def get_scoreboard(self, league: str, date: Optional[str] = None, sport: Optional[str] = None, group: Optional[str] = None, season_type: Optional[str] = None, limit: int = 1000, raw: bool = False) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """Fetch the scoreboard (schedule, live scores, odds) for a specific date.
         
@@ -650,15 +706,53 @@ class ESPNClient:
                 "scoreValue": play.get("scoreValue")
             })
             
-        return {
+        summary_dict = {
             "gameInfo": raw_data.get("gameInfo", {}),
             "boxscore": boxscore,
             "odds": odds,
             "plays": plays,
             "scoringPlays": raw_data.get("scoringPlays", []),
+            "keyEvents": [],
+            "rosters": [],
             "videos": raw_data.get("videos", []),
             "articles": raw_data.get("article", {})
         }
+        
+        # Standardize Soccer-specific / Hockey-specific blocks
+        for event in raw_data.get("keyEvents", []):
+            summary_dict["keyEvents"].append({
+                "id": event.get("id"),
+                "text": event.get("text"),
+                "shortText": event.get("shortText"),
+                "type": event.get("type", {}).get("text"),
+                "clock": event.get("clock", {}).get("displayValue"),
+                "teamId": event.get("team", {}).get("id")
+            })
+            
+        for roster_block in raw_data.get("rosters", []):
+            team_info = roster_block.get("team", {})
+            roster_list = []
+            for p in roster_block.get("roster", []):
+                ath = p.get("athlete", {})
+                roster_list.append({
+                    "id": ath.get("id"),
+                    "name": ath.get("displayName"),
+                    "position": p.get("position", {}).get("name"),
+                    "starter": p.get("starter", False),
+                    "jersey": p.get("jersey"),
+                    "substitutedIn": p.get("substitutedIn", False),
+                    "substitutedOut": p.get("substitutedOut", False),
+                    "cards": p.get("cards", []) # Array of red/yellow card details
+                })
+                
+            summary_dict["rosters"].append({
+                "teamId": team_info.get("id"),
+                "team": team_info.get("displayName"),
+                "formation": roster_block.get("formation"),
+                "players": roster_list
+            })
+            
+        return summary_dict
 
     async def get_news(self, league: str, team_id: Optional[str] = None, sport: Optional[str] = None, limit: int = 50) -> List[Dict[str, Any]]:
         """Fetch the latest news articles and headlines for a specific league or team.

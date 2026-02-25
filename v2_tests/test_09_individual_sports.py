@@ -46,5 +46,19 @@ async def main():
         except Exception as e:
             print(f"F1 Scoreboard Failed: {e}")
 
+        print("\n--- 3. GOLF (PGA) ---")
+        
+        # Test Live/Recent Leaderboard
+        try:
+            # We don't provide a date, so it gets the current/live PGA tournament!
+            pga_leaderboard = await client.pga.leaderboard()
+            print(f"Total Golfers on Live Leaderboard: {len(pga_leaderboard)}")
+            if pga_leaderboard:
+                leader = pga_leaderboard[0]
+                print(f"Tournament Name: {leader['tournamentName']} ({leader['status']})")
+                print(f"Current Leader: {leader['name']} (Score: {leader['scoreToPar']})")
+        except Exception as e:
+            print(f"PGA Leaderboard Failed: {e}")
+
 if __name__ == "__main__":
     asyncio.run(main())

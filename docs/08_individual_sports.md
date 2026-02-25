@@ -92,18 +92,62 @@ For Racing (like Formula 1), `scoreboard()` will return the upcoming scheduled s
 
 ---
 
-## 3. Supported vs. Unsupported Endpoints
+## 3. Golf Leaderboards
+
+Golf is completely unique because a tournament isn't a bracket of 1v1 matchups; it's a massive, 150-player leaderboard that runs continuously for four days. 
+
+Instead of forcing this into `scoreboard()`, `espnpy` has a dedicated `.leaderboard()` method explicitly for Golf (`espnpy.pga`, `espnpy.lpga`, `espnpy.liv`) that effortlessly returns the live leaderboard, rank, strokes to par, and round-by-round splits!
+
+```python
+import espnpy
+import asyncio
+
+async def get_golf():
+    # Fetching the historic 2024 Masters leaderboard!
+    # Omit the date parameter to fetch the live, currently ongoing PGA tournament.
+    leaderboard = await espnpy.pga.leaderboard(date="20240414")
+    
+    print(f"Total Golfers on Leaderboard: {len(leaderboard)}")
+    
+    for golfer in leaderboard[:3]:
+        print(f"\n[{golfer['rank']}] {golfer['name']}")
+        print(f"Score to Par: {golfer['scoreToPar']} (Total Strokes: {golfer['totalStrokes']})")
+        print(f"Round Scores: {golfer['rounds']}")
+
+asyncio.run(get_golf())
+```
+
+### Expected Output Structure:
+```json
+{
+  "tournamentName": "Masters Tournament",
+  "status": "Final",
+  "venue": "Augusta National Golf Club",
+  "id": "4690898",
+  "name": "Scottie Scheffler",
+  "flag": "https://a.espncdn.com/i/teamlogos/countries/500/usa.png",
+  "rank": "1",
+  "scoreToPar": "-11",
+  "rounds": ["66", "72", "71", "68"],
+  "totalStrokes": "277"
+}
+```
+
+---
+
+## 4. Supported vs. Unsupported Endpoints
 
 Because ESPN's backend for Individual Sports is limited compared to massive leagues like the NFL, not every `espnpy` method is supported by ESPN.
 
-| Method | Team Sports | Tennis / Golf / MMA | Racing |
-| :--- | :--- | :--- | :--- |
-| `.standings()` | ✅ Supported | ✅ Supported (Rankings) | ✅ Supported (Driver Pts)|
-| `.scoreboard()` | ✅ Supported | ✅ Supported (Matches) | ✅ Supported (Sessions)|
-| `.news()` | ✅ Supported | ✅ Supported | ✅ Supported |
-| `.athlete(id)` | ✅ Supported | ✅ Supported | ✅ Supported |
-| `.game_summary()` | ✅ Supported | ❌ *Unsupported (400)* | ❌ *Unsupported (400)* |
-| `.athlete_stats()`| ✅ Supported | ❌ *Unsupported (404)* | ❌ *Unsupported (404)* |
-| `.odds()` | ✅ Supported | ❌ *Unsupported (404)* | ❌ *Unsupported (404)* |
+| Method | Team Sports | Tennis / MMA | Racing | Golf |
+| :--- | :--- | :--- | :--- | :--- |
+| `.standings()` | ✅ Supported | ✅ Supported (Rankings) | ✅ Supported (Driver Pts)| ✅ Supported (Rankings)|
+| `.scoreboard()` | ✅ Supported | ✅ Supported (Matches) | ✅ Supported (Sessions)| ❌ *Unsupported (Use Leaderboard)* |
+| `.leaderboard()`| ❌ *Unsupported*| ❌ *Unsupported*| ❌ *Unsupported* | ✅ Supported |
+| `.news()` | ✅ Supported | ✅ Supported | ✅ Supported | ✅ Supported |
+| `.athlete(id)` | ✅ Supported | ✅ Supported | ✅ Supported | ✅ Supported |
+| `.game_summary()` | ✅ Supported | ❌ *Unsupported (400)* | ❌ *Unsupported (400)* | ❌ *Unsupported (400)* |
+| `.athlete_stats()`| ✅ Supported | ❌ *Unsupported (404)* | ❌ *Unsupported (404)* | ❌ *Unsupported (404)* |
+| `.odds()` | ✅ Supported | ❌ *Unsupported (404)* | ❌ *Unsupported (404)* | ❌ *Unsupported (404)* |
 
 *If you attempt to call an unsupported endpoint for an individual sport, the underlying `httpx` client will automatically throw an `HTTPStatusError` (usually a `404 Not Found` or `400 Bad Request`). You should wrap these calls in `try/except` blocks if your app dynamically switches between sports!*

@@ -15,9 +15,13 @@ Each file includes an **"Expected Output"** comment block at the very bottom, so
 
 ### ⚽️ Soccer
 *   [**`01_epl_roster_and_news.py`**](./soccer/01_epl_roster_and_news.py): Learn how to handle ESPN's soccer dot-notation (`eng.1`), pull current team rosters, and fetch the latest breaking headlines.
+*   [**`02_epl_match_summary.py`**](./soccer/02_epl_match_summary.py): Learn how to pull deep-dive soccer data from a match summary, including tactical **Formations** (e.g. `4-2-3-1`) and extracting **Yellow/Red Cards** and Substitutions from the `keyEvents` array.
 
 ### 🎾 Tennis
 *   [**`01_atp_rankings_and_scores.py`**](./tennis/01_atp_rankings_and_scores.py): Learn how `espnpy` automatically converts Standings into Player Rankings, extracts the specific Tournament Name, and flawlessly parses Set-by-Set Linescores (e.g. `6-3, 6-4`) into readable strings.
+
+### ⛳️ Golf
+*   [**`01_pga_leaderboard.py`**](./golf/01_pga_leaderboard.py): Learn how to extract a massive, 150-player live leaderboard from a PGA event, including round-by-round score splits and strokes under par (e.g. `-12`).
 
 ### 🏎️ Racing
 *   [**`01_f1_standings_and_grid.py`**](./racing/01_f1_standings_and_grid.py): Learn how `espnpy` handles individual sports grids by automatically extracting F1 Drivers instead of Teams, sorting them perfectly by Championship Points.

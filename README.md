@@ -130,6 +130,7 @@ Once you have accessed a league via the proxy (e.g. `espnpy.nba`), you have acce
 - `await espnpy.nba.standings(season="YYYY")`: The full league standings, ordered by win percentage.
 - `await espnpy.nba.schedule(team_id, season="YYYY")`: The full season schedule and results for a specific team.
 - `await espnpy.nba.scoreboard(date="YYYYMMDD")`: The schedule/scores for a day (or current week if omitted).
+- `await espnpy.pga.leaderboard(date="YYYYMMDD")`: Fetch a live or historical tournament leaderboard (For Golf only).
 - `await espnpy.nba.game_summary(event_id)`: Boxscore, play-by-play, and betting odds for a specific game.
 - `await espnpy.nba.odds(event_id)`: Detailed betting lines from multiple sportsbooks.
 - `await espnpy.nba.news(team_id=None, limit=50)`: The latest news headlines.
